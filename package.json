@@ -71,6 +71,7 @@
     "redux-fp": "^0.2.0",
     "redux-observable": "^0.14.1",
     "reselect": "^3.0.1",
+    "run-parallel": "^1.1.6",
     "rxjs": "^5.4.0",
     "tcomb": "^3.2.20",
     "tcomb-form": "^0.9.16"
