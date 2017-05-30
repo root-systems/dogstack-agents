@@ -39,6 +39,16 @@ combines
 - [`./accounts/service.js`](./accounts/service.js)
 - [`./authentication/service.js`](./authentication/service.js)
 
+### `actions`
+
+[`redux` actions creators](http://redux.js.org/docs/Glossary.html#action-creator)
+
+exports `{ agents, accounts, authentication }` action creators from
+
+- [`./agents/index.js`](./agents/index.js) `actions` from [`feathers-action`](https://github.com/ahdinosaur/feathers-action)
+- [`./accounts/index.js`](./accounts/index.js) `actions` from [`feathers-action`](https://github.com/ahdinosaur/feathers-action)
+- [`./authentication/actions.js`](./authentication/actions.js)
+
 ### `updater`
 
 [`redux-fp` updater](https://github.com/rvikmanis/redux-fp#updaters-vs-reducers)
