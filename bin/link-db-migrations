@@ -1,0 +1,55 @@
+#!/usr/bin/env node
+
+const { assign } = Object
+const { readdir, symlink, unlink } = require('fs')
+const { join, relative, basename } = require('path')
+const parallel = require('run-parallel')
+
+const cwd = process.cwd()
+
+// if cwd is this module root directory, do nothing
+// because we only want to link an app to this plugin
+if (cwd === join(__dirname, '..')) return
+
+const action = process.argv[2]
+if (action !== 'link' && action !== 'unlink') {
+  throw new Error('link-migrations: unknown action: ' + action)
+}
+
+const env = process.env.NODE_ENV || 'development'
+const dbConfigPath = join(cwd, 'db')
+var dbConfig = require(dbConfigPath)
+var migrationsConfig = dbConfig.migrations
+if (dbConfig[env]) {
+  migrationsConfig = assign(migrationsConfig, dbConfig[env].migrations)
+}
+const appMigrationsDir = migrationsConfig.directory
+const pluginMigrationsDir = join(__dirname, '../db/migrations')
+
+readdir(pluginMigrationsDir, (err, paths) => {
+  if (err) throw new Error('link-migrations: error reading directory ' + pluginMigrationsDir)
+
+  process.chdir(appMigrationsDir)
+  // get relative path from cwd
+  const linkTargets = paths.map(path => {
+    const absolutePath = join(pluginMigrationsDir, path)
+    const relativeToAppMigrationsDir = relative('.', absolutePath)
+    return relativeToAppMigrationsDir
+  })
+  const linkPaths = paths.map(path => basename(path))
+  var tasks
+  if (action === 'link') {
+    tasks = linkTargets.map((target, index) => cb => {
+      console.log('target', target)
+      symlink(target, linkPaths[index], cb)
+    })
+  } else if (action === 'unlink') {
+    tasks = linkPaths.map(path => cb => unlink(path, cb))
+  }
+  parallel(tasks, (err) => {
+    if (err) {
+      console.error(`error ${action}ing db migrations!`)
+      throw err
+    }
+  })
+})
