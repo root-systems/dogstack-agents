@@ -9,6 +9,8 @@ dogstack plugin to provide core user functionality
 - [authentication](https://en.wikipedia.org/wiki/Authentication)
 - [authorization](https://en.wikipedia.org/wiki/Authorization)
 
+[![we're on a mission from dog](https://i.imgflip.com/wn3bl.jpg)](https://imgflip.com/i/wn3bl)
+
 ## example
 
 for an example using `dogstack-agents`, see [`dogstack-example`](https://github.com/dogstack/dogstack-example)
