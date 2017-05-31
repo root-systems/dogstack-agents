@@ -1,7 +1,11 @@
 const { concat } = require('redux-fp')
 
-module.exports = concat(
-  require('./agents').updater,
-  require('./accounts').updater,
-  require('./authentication').updater
+import { updater as agents } from './agents'
+import { updater as accounts } from './accounts'
+import { updater as authentication } from './authentication'
+
+export default concat(
+  agents,
+  accounts,
+  authentication
 )

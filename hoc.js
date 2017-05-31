@@ -1,9 +1,3 @@
-import UserIsAuthenticated from './authentication/hoc/userIsAuthenticated'
-import UserIsAuthenticatedOrHome from './authentication/hoc/userIsAuthenticatedOrHome'
-import UserIsNotAuthenticated from './authentication/hoc/userIsNotAuthenticated'
-
-module.exports = {
-  UserIsAuthenticated,
-  UserIsNotAuthenticated,
-  UserIsAuthenticatedOrHome
-}
+export { default as UserIsAuthenticated } from './authentication/hoc/userIsAuthenticated'
+export { default as UserIsAuthenticatedOrHome } from './authentication/hoc/userIsAuthenticatedOrHome'
+export { default as UserIsNotAuthenticated } from './authentication/hoc/userIsNotAuthenticated'

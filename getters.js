@@ -1,11 +1,9 @@
-module.exports = {
-  getAgents: require('./agents/getters/getAgents'),
-  getAccounts: require('./accounts/getters/getAccounts'),
-  getAuthentication: require('./authentication/getters/getAuthentication'),
-  getAccount: require('./authentication/getters/getAccount'),
-  getAccessToken: require('./authentication/getters/getAccessToken'),
-  getSigningIn: require('./authentication/getters/getSigningIn'),
-  getIsAuthenticated: require('./authentication/getters/getIsAuthenticated'),
-  getIsNotAuthenticated: require('./authentication/getters/getIsNotAuthenticated'),
-  getAuthenticationError: require('./authentication/getters/getAuthenticationError'),
-}
+export { default as getAgents } from './agents/getters/getAgents'
+export { default as getAccounts } from './accounts/getters/getAccounts'
+export { default as getAuthentication } from './authentication/getters/getAuthentication'
+export { default as getAccount } from './authentication/getters/getAccount'
+export { default as getAccessToken } from './authentication/getters/getAccessToken'
+export { default as getSigningIn } from './authentication/getters/getSigningIn'
+export { default as getIsAuthenticated } from './authentication/getters/getIsAuthenticated'
+export { default as getIsNotAuthenticated } from './authentication/getters/getIsNotAuthenticated'
+export { default as getAuthenticationError } from './authentication/getters/getAuthenticationError'

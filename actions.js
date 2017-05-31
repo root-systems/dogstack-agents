@@ -1,5 +1,3 @@
-module.exports = {
-  agents: require('./agents').actions,
-  accounts: require('./accounts').actions,
-  authentication: require('./authentication').actions
-}
+export { actions as agents } from './agents'
+export { actions as accounts } from './accounts'
+export { actions as authentication } from './authentication'

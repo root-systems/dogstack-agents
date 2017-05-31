@@ -1,8 +1,7 @@
-module.exports = {
-  actions: require('./actions'),
-  updater: require('./updater'),
-  epic: require('./epic'),
-  getters: require('./getters'),
-  components: require('./components'),
-  hoc: require('./hoc')
-}
+import * as actions from './actions'
+export { actions }
+export { default as updater } from './updater'
+export { default as epic } from './epic'
+export * from './getters'
+export * from './components'
+export * from './hoc'

@@ -1,3 +1,8 @@
 const createModule = require('feathers-action')
 
-module.exports = createModule('agents')
+const module = createModule('agents')
+
+export default module
+export const actions = module.actions
+export const updater = module.updater
+export const epic = module.epic

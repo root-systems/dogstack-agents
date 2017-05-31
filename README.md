@@ -29,7 +29,7 @@ after uninstall, this module should unlink these linked migrations.
 
 ## usage
 
-### `{ service, updater, epic, getters, components, hoc } = require('dogstack-agents')`
+### `{ service, actions, updater, epic, ...getters, ...components, ...hoc } = require('dogstack-agents')`
 
 ### `service`
 
