@@ -5,7 +5,7 @@ const credential = action => (state = null) => {
     case 'REGISTER_SUCCESS':
     case 'SIGN_IN_SUCCESS':
       return action.payload
-    case 'SIGN_OUT_SUCCESS':
+    case 'LOG_OUT_SUCCESS':
       return null
     default:
       return state

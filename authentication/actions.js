@@ -1,36 +1,34 @@
 import createAction from '@f/create-action'
-import createCid from 'cuid'
 
-export const signIn = createAction('SIGN_IN', undefined, metaCreator)
-export const signInStart = createAction('SIGN_IN_START')
-export const signInSuccess = createAction('SIGN_IN_SUCCESS')
-export const signInError = createAction('SIGN_IN_ERROR')
+const payloadCtor = (cid, payload) => payload
+const metaCtor = (cid) => ({ cid })
 
-export const signOut = createAction('SIGN_OUT', undefined, metaCreator)
-export const signOutStart = createAction('SIGN_OUT_START')
-export const signOutSuccess = createAction('SIGN_OUT_SUCCESS')
-export const signOutError = createAction('SIGN_OUT_ERROR')
+export const signIn = createAction('SIGN_IN', payloadCtor, metaCtor)
+export const signInStart = createAction('SIGN_IN_START', payloadCtor, metaCtor)
+export const signInSuccess = createAction('SIGN_IN_SUCCESS', payloadCtor, metaCtor)
+export const signInError = createAction('SIGN_IN_ERROR', payloadCtor, metaCtor)
 
-export const register = createAction('REGISTER', undefined, metaCreator)
-export const registerStart = createAction('REGISTER_START')
-export const registerSuccess = createAction('REGISTER_SUCCESS')
-export const registerError = createAction('REGISTER_ERROR')
+export const logOut = createAction('LOG_OUT', payloadCtor, metaCtor)
+export const logOutStart = createAction('LOG_OUT_START', payloadCtor, metaCtor)
+export const logOutSuccess = createAction('LOG_OUT_SUCCESS', payloadCtor, metaCtor)
+export const logOutError = createAction('LOG_OUT_ERROR', payloadCtor, metaCtor)
+
+export const register = createAction('REGISTER', payloadCtor, metaCtor)
+export const registerStart = createAction('REGISTER_START', payloadCtor, metaCtor)
+export const registerSuccess = createAction('REGISTER_SUCCESS', payloadCtor, metaCtor)
+export const registerError = createAction('REGISTER_ERROR', payloadCtor, metaCtor)
 
 export default {
   signIn,
   signInStart,
   signInSuccess,
   signInError,
-  signOut,
-  signOutStart,
-  signOutSuccess,
-  signOutError,
+  logOut,
+  logOutStart,
+  logOutSuccess,
+  logOutError,
   register,
   registerStart,
   registerSuccess,
   registerError
-}
-
-function metaCreator (...args) {
-  return { cid: createCid() }
 }
