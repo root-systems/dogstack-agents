@@ -1,6 +1,6 @@
 import { updateStateAt, combine, withDefaultState, decorate } from 'redux-fp'
 
-const account = action => (state = null) => {
+const credential = action => (state = null) => {
   switch (action.type) {
     case 'REGISTER_SUCCESS':
     case 'SIGN_IN_SUCCESS':
@@ -55,7 +55,7 @@ const error = action => (state = null) => {
 export const localUpdater = decorate(
   withDefaultState({}),
   combine({
-    account,
+    credential,
     isSigningIn,
     isRegistering,
     error

@@ -1,7 +1,7 @@
 import { combineEpics } from 'redux-observable'
 import Rx from 'rxjs'
 
-import { actions as accounts } from '../accounts'
+import { actions as credentials } from '../credentials'
 import {
   signIn, signInStart, signInSuccess, signInError,
   signOut, signOutStart, signOutSuccess, signOutError,
@@ -50,15 +50,15 @@ export function registerEpic (action$, store, deps) {
     .mergeMap(action => {
       const { cid } = action.meta
 
-      const createdSuccess$ = action$.ofType(accounts.complete.type).filter(onlyCid).take(1)
-      const createdError$ = action$.ofType(accounts.error.type).filter(onlyCid).take(1)
+      const createdSuccess$ = action$.ofType(credentials.complete.type).filter(onlyCid).take(1)
+      const createdError$ = action$.ofType(credentials.error.type).filter(onlyCid).take(1)
       // get only the last set item, since it should be the latest
-      const createdSet$ = action$.ofType(accounts.set.type).filter(onlyCid)
+      const createdSet$ = action$.ofType(credentials.set.type).filter(onlyCid)
 
       return Rx.Observable.merge(
         Rx.Observable.of(
           registerStart(),
-          accounts.create(action.meta.cid, action.payload)
+          credentials.create(action.meta.cid, action.payload)
         ),
         createdSuccess$
         .withLatestFrom(createdSet$, (success, set) => set.payload.data)

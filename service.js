@@ -1,6 +1,6 @@
 const services = [
   require('./agents/service'),
-  require('./accounts/service'),
+  require('./credentials/service'),
   require('./authentication/service')
 ]
 

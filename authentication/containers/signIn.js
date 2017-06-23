@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import SignIn from '../components/signIn'
 
 import { signIn } from '../actions'
-import { getSignInProps } from '../getters'
+import getSignInProps from '../getters/getSignInProps'
 
 export default connect(
   getSignInProps,

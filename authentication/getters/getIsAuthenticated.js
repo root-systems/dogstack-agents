@@ -1,8 +1,8 @@
 import { createSelector, createStructuredSelector } from 'reselect'
 
-import getAccount from './getAccount'
+import getCredential from './getCredential'
 
 export default createSelector(
-  getAccount,
+  getCredential,
   Boolean
 )

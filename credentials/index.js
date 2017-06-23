@@ -1,6 +1,6 @@
 const createModule = require('feathers-action')
 
-const module = createModule('accounts')
+const module = createModule('credentials')
 
 export default module
 export const actions = module.actions

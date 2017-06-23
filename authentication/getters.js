@@ -8,9 +8,9 @@ export const getSigningIn = createSelector(
   propOr(false, 'signingIn')
 )
 
-export const getAccount = createSelector(
+export const getCredential = createSelector(
   getAuthentication,
-  propOr(null, 'account')
+  propOr(null, 'credential')
 )
 
 export const getAccessToken = createSelector(

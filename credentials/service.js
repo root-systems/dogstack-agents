@@ -6,7 +6,7 @@ module.exports = function () {
   const app = this
   const db = app.get('db')
 
-  const name = 'accounts'
+  const name = 'credentials'
   const options = { Model: db, name }
 
   app.use(name, feathersKnex(options))
