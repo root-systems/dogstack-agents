@@ -85,17 +85,18 @@ exports the following getters
 - [`getSigningIn`](./authentication/getters/getSigningIn.js)
 - [`getIsAuthenticated`](./authentication/getters/getIsAuthenticated.js)
 - [`getIsNotAuthenticated`](./authentication/getters/getIsNotAuthenticated.js)
-- [`getAuthenticationError`](./authentication/getters/getAuthenticationError.js)
+- [`getRegisterError`](./authentication/getters/getRegisterError.js)
+- [`getSignInError`](./authentication/getters/getSignInError.js)
 
 ### `components`
 
-React components to use in your app
+TODO React components to use in your app
 
 exports the following components
 
-- [`SignIn`](./authentication/containers/signIn.js)
-- [`SignOut`](./authentication/containers/signOut.js)
-- [`Register`](./authentication/containers/register.js)
+- [`Register`](./authentication/containers/Register.js)
+- [`SignIn`](./authentication/containers/SignIn.js)
+- [`LogOut`](./authentication/containers/LogOut.js)
 
 ### `hoc`
 
@@ -104,7 +105,6 @@ exports the following components
 exports the following higher-order components:
 
 - [`UserIsAuthenticated`](./authentication/hoc/userIsAuthenticated)
-- [`UserIsAuthenticatedOrHome`](./authentication/hoc/userIsAuthenticatedOrHome)
 - [`UserIsNotAuthenticated`](./authentication/hoc/userIsNotAuthenticated)
 
 ## license

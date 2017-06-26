@@ -60,6 +60,7 @@
     "feathers-authentication": "^1.2.3",
     "feathers-authentication-jwt": "^0.3.1",
     "feathers-authentication-local": "^0.3.4",
+    "feathers-authentication-oauth2": "^0.2.5",
     "feathers-hooks-common": "ahdinosaur/feathers-hooks-common#build",
     "feathers-knex": "^2.6.3",
     "incremental-id": "^1.0.0",
