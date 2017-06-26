@@ -1,3 +1,7 @@
 import { createStructuredSelector } from 'reselect'
 
-export default createStructuredSelector({})
+import getRegisterError from './getRegisterError'
+
+export default createStructuredSelector({
+  error: getRegisterError
+})

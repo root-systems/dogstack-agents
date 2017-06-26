@@ -19,7 +19,7 @@ export function initEpic () {
 
 export function signInEpic (action$, store, { feathers }) {
   return action$.ofType(signIn.type)
-    .mergeMap(({ payload, meta: { cid } }) => Rx.Observable.concat(
+    .switchMap(({ payload, meta: { cid } }) => Rx.Observable.concat(
       Rx.Observable.of(signInStart(cid)),
       Rx.Observable.fromPromise(
         feathers.authenticate(payload)
@@ -37,22 +37,20 @@ export function signInEpic (action$, store, { feathers }) {
 
 export function logOutEpic (action$, store, { feathers }) {
   return action$.ofType(logOut.type)
-    .mergeMap(({ meta: { cid } }) => Rx.Observable.concat(
+    .switchMap(({ meta: { cid } }) => Rx.Observable.concat(
       Rx.Observable.of(logOutStart(cid)),
       Rx.Observable.fromPromise(
         feathers.logout()
-          .then(() => Rx.Observable.of(
-            logOutSuccess(cid),
-            push('/') // TODO this should be configurable
-          ))
-          .catch((err) => logOutError(cid, err))
-        )
+          .then(() => logOutSuccess(cid))
+      )
+        .concat(Rx.Observable.of(push('/'))) // TODO this should be configurable
+        .catch((err) => Rx.Observable.of(logOutError(cid, err)))
     ))
 }
 
 export function registerEpic (action$, store, deps) {
   return action$.ofType(register.type)
-    .mergeMap(action => {
+    .switchMap(action => {
       const { payload } = action
       const { name, email, password } = payload
       const { cid } = action.meta
@@ -61,6 +59,7 @@ export function registerEpic (action$, store, deps) {
       const createdError$ = action$.ofType(credentials.error.type).filter(onlyCid).take(1)
       // get only the last set item, since it should be the latest
       const createdSet$ = action$.ofType(credentials.set.type).filter(onlyCid)
+      const signInSuccess$ = action$.ofType(signInSuccess.type).filter(onlyCid).take(1)
 
       // TODO create initial profile with name
       return Rx.Observable.merge(
@@ -69,15 +68,15 @@ export function registerEpic (action$, store, deps) {
           credentials.create(cid, { email, password })
         ),
         createdSuccess$
-        .withLatestFrom(createdSet$, (success, set) => set.payload.data)
-        .mergeMap(created => {
-          return Rx.Observable.of(
-            registerSuccess(cid, created),
-            push('/'), // TODO this should be configurable
-            signIn({ strategy: 'local', email, password })
-          )
-        }),
-        createdError$.map(action => registerError(cid, action.payload))
+          .withLatestFrom(createdSet$, (success, set) => set.payload.data)
+          .mergeMap(created => {
+            return Rx.Observable.of(
+              registerSuccess(cid, created),
+              signIn(cid, { strategy: 'local', email, password })
+            )
+          }),
+        createdError$.map(action => registerError(cid, action.payload)),
+        signInSuccess$.mapTo(push('/')) // TODO this should be configurable
       )
 
       function onlyCid (action) {

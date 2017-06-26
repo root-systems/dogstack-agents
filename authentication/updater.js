@@ -36,15 +36,23 @@ const isRegistering = action => (state = false) => {
   }
 }
 
-const error = action => (state = null) => {
+const signInError = action => (state = null) => {
   switch (action.type) {
-    case 'REGISTER_START':
     case 'SIGN_IN_START':
       return null
-    case 'REGISTER_ERROR':
+    case 'SIGN_IN_ERROR':
       console.error(action.payload)
       return action.payload
-    case 'SIGN_IN_ERROR':
+    default:
+      return state
+  }
+}
+
+const registerError = action => (state = null) => {
+  switch (action.type) {
+    case 'REGISTER_START':
+      return null
+    case 'REGISTER_ERROR':
       console.error(action.payload)
       return action.payload
     default:
@@ -57,8 +65,9 @@ export const localUpdater = decorate(
   combine({
     credential,
     isSigningIn,
+    signInError,
     isRegistering,
-    error
+    registerError
   })
 )
 

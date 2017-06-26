@@ -6,6 +6,7 @@ export { default as getAccessToken } from './authentication/getters/getAccessTok
 export { default as getSigningIn } from './authentication/getters/getSigningIn'
 export { default as getIsAuthenticated } from './authentication/getters/getIsAuthenticated'
 export { default as getIsNotAuthenticated } from './authentication/getters/getIsNotAuthenticated'
-export { default as getAuthenticationError } from './authentication/getters/getAuthenticationError'
-
+export { default as getSignInError } from './authentication/getters/getSignInError'
+export { default as getRegisterError } from './authentication/getters/getRegisterError'
+export { default as getSignInProps } from './authentication/getters/getSignInProps'
 export { default as getRegisterProps } from './authentication/getters/getRegisterProps'
