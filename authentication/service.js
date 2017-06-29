@@ -22,7 +22,7 @@ module.exports = function () {
     const provider = config.remote[name]
     const plugin = remotePlugins[provider.type]
     if (!plugin) return
-    app.configure(plugin(assign(provider, { name })))
+    app.configure(plugin(assign(provider, { name, formatter: remoteFormatter })))
   })
   
 
@@ -31,6 +31,27 @@ module.exports = function () {
       create: [
         authenticate(config.strategies)
       ]
+    }
+  })
+}
+
+function remoteFormatter (req, res, next) {
+  console.log('formatter', res.data)
+  const token = res.data
+  var template = `
+    <html>
+      <head>
+        <script>
+          window.token = JSON.parse('${JSON.stringify(token)}')
+        </script>
+      </head>
+      <body></body>
+    </html>
+  `
+
+  res.format({
+    'text/html': function () {
+      res.send(template)
     }
   })
 }
