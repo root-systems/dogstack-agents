@@ -36,7 +36,6 @@ module.exports = function () {
 }
 
 function remoteFormatter (req, res, next) {
-  console.log('formatter', res.data)
   const token = res.data
   var template = `
     <html>

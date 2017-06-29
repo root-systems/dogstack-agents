@@ -39,10 +39,10 @@ const hooks = {
 function getEmailFromRemote (hook) {
   if (hook.params.oauth) {
     const remoteProvider = hook.params.oauth.provider
-      console.log('remoteProvider', hook.params.oauth, hook.data)
     const remoteData = hook.data[remoteProvider]
-    if (remoteData.emails && remoteData.emails.length > 0) {
-      hook.data.email = remoteData.emails[0]
+    const remoteProfile = remoteData.profile
+    if (remoteProfile.emails && remoteProfile.emails.length > 0) {
+      hook.data.email = remoteProfile.emails[0].value
     }
   }
   return hook
@@ -72,10 +72,10 @@ function createProfile (hook) {
   if (hook.params.oauth) {
     const remoteProvider = hook.params.oauth.provider
     const remoteData = hook.data[remoteProvider]
-
-    name = remoteData.profile.displayName
-    if (remoteData.photos && remoteData.photos.length > 0) {
-      avatar = remoteData.photos[0].value
+    const remoteProfile = remoteData.profile
+    name = remoteProfile.displayName
+    if (remoteProfile.photos && remoteProfile.photos.length > 0) {
+      avatar = remoteProfile.photos[0].value
     }
   }
 

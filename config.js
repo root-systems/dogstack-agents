@@ -24,6 +24,7 @@ module.exports = {
         type: 'oauth2',
         Strategy: require('passport-facebook').Strategy,
         scope: ['public_profile', 'email'],
+        profileFields: ['id', 'displayName', 'photos', 'email'],
         label: 'Facebook',
         icon: 'fa fa-facebook',
         backgroundColor: '#3b5998'
