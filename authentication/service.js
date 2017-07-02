@@ -1,5 +1,6 @@
 const { keys, assign } = Object
-const { authenticate } = require('feathers-authentication').hooks
+const authentication = require('feathers-authentication')
+const { authenticate } = authentication.hooks
 const local = require('feathers-authentication-local')
 const jwt = require('feathers-authentication-jwt')
 const oauth2 = require('feathers-authentication-oauth2')
@@ -13,8 +14,12 @@ const remotePlugins = { oauth2 }
 module.exports = function () {
   const app = this
   const config = app.get('authentication')
+  assert(authConfig, 'must set `authentication` in config.')
+
+  const authConfig = app.get('authentication')
 
   app
+  .configure(authentication(authConfig))
   .configure(jwt())
   .configure(local(config.local))
 
@@ -24,7 +29,6 @@ module.exports = function () {
     if (!plugin) return
     app.configure(plugin(assign(provider, { name, formatter: remoteFormatter })))
   })
-  
 
   app.service('authentication').hooks({
     before: {
