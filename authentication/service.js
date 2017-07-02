@@ -1,4 +1,5 @@
 const { keys, assign } = Object
+const assert = require('assert')
 const authentication = require('feathers-authentication')
 const { authenticate } = authentication.hooks
 const local = require('feathers-authentication-local')
