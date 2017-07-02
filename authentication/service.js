@@ -14,13 +14,12 @@ const remotePlugins = { oauth2 }
 
 module.exports = function () {
   const app = this
-  const config = app.get('authentication')
-  assert(authConfig, 'must set `authentication` in config.')
 
-  const authConfig = app.get('authentication')
+  const config = app.get('authentication')
+  assert(config, 'must set `authentication` in config.')
 
   app
-  .configure(authentication(authConfig))
+  .configure(authentication(config))
   .configure(jwt())
   .configure(local(config.local))
 
