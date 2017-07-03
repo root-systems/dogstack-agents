@@ -1,40 +1,41 @@
 import test from 'ava'
-import freeze from 'deep-freeze'
 import { Observable, Scheduler } from 'rxjs'
 import { ActionsObservable } from 'redux-observable'
-import updater from '../updater'
 import {
   signInEpic,
-  signOutEpic,
-  registerEpic,
-  initEpic
+  logOutEpic,
+  registerEpic
+//  initEpic
 } from '../epic'
 import {
   signIn,
   signInStart,
   signInSuccess,
   signInError,
-  signOut,
-  signOutStart,
-  signOutSuccess,
-  signOutError,
+  logOut,
+  logOutStart,
+  logOutSuccess,
+  logOutError,
   registerStart,
   registerSuccess,
   registerError,
   register
 } from '../actions'
-import { actions as accountActions } from '../../accounts'
+import { actions as credentialActions } from '../../credentials'
 
-test('register dispatches registerStart and accounts.create action', function (t) {
-  t.plan(4)
+test('register dispatches registerStart and credentials.create action', function (t) {
+  t.plan(3)
   var i = 0
-  var account = {}
-  const registerAction = register(account)
-  const { cid } = registerAction.meta
+  var credential = {
+    email: 'test@test.nz',
+    password: 'secret-sauce'
+  }
+  const cid = Symbol('cid')
+  const registerAction = register(cid, credential)
   const action$ = ActionsObservable.of(registerAction)
   const expectedActions = [
-    registerStart(),
-    accountActions.create(cid, account)
+    registerStart(cid),
+    credentialActions.create(cid, credential)
   ]
   return registerEpic(action$, null, {})
     .do(actualAction => {
@@ -42,7 +43,6 @@ test('register dispatches registerStart and accounts.create action', function (t
       if (i === 0 || i === 1) {
         t.deepEqual(actualAction, expectedAction)
         if (i === 0) t.is(actualAction.payload, expectedAction.payload)
-        else if (i === 1) t.is(actualAction.payload.data, expectedAction.payload.data)
       }
       i++
     })
@@ -51,24 +51,23 @@ test('register dispatches registerStart and accounts.create action', function (t
 test('register happy path dispatches registerSuccess and signIn', function (t) {
   t.plan(3)
   var i = 0
-  var account = {
-    id: Symbol('account')
+  var credential = {
+    id: Symbol('credential')
   }
-  const registerAction = register(account)
-  const { cid } = registerAction.meta // SMELL
+  const cid = Symbol('cid')
+  const registerAction = register(cid, credential)
   const action$ = ActionsObservable.from(
     Observable.create(observer => {
       observer.next(registerAction)
-      observer.next(accountActions.set(cid, account.id, account))
-      observer.next(accountActions.complete(cid))
+      observer.next(credentialActions.set(cid, credential.id, credential))
+      observer.next(credentialActions.complete(cid))
       observer.complete()
     }),
     Scheduler.async
   )
   const expectedActions = [
-    registerSuccess(account),
-    // SMELL we should be able to pass in a cid to signIn
-    // signIn(cid, account)
+    registerSuccess(cid, credential)
+    // signIn(cid, credential)
   ]
   return registerEpic(action$)
     .do(actualAction => {
@@ -88,19 +87,19 @@ test('register happy path dispatches registerSuccess and signIn', function (t) {
 test('register unhappy path dispatches registerError', function (t) {
   t.plan(2)
   var i = 0
-  var account = {}
+  var credential = {}
   var err = 'bang!'
-  const registerAction = register(account)
-  const { cid } = registerAction.meta // SMELL
+  const cid = Symbol('cid')
+  const registerAction = register(cid, credential)
   const action$ = ActionsObservable.from(
     Observable.create(observer => {
       observer.next(registerAction)
-      observer.next(accountActions.error(cid, err))
+      observer.next(credentialActions.error(cid, err))
       observer.complete()
     }),
     Scheduler.async
   )
-  const expectedAction = registerError(err)
+  const expectedAction = registerError(cid, err)
   return registerEpic(action$)
     .do(actualAction => {
       if (i++ === 2) {
@@ -113,10 +112,11 @@ test('register unhappy path dispatches registerError', function (t) {
 test('signIn dispatches signInStart action', function (t) {
   t.plan(2)
   var i = 0
+  const cid = Symbol('cid')
   const action$ = ActionsObservable.from([
-    signIn()
+    signIn(cid)
   ])
-  const expectedAction = signInStart()
+  const expectedAction = signInStart(cid)
   const feathers = {
     authenticate: () => Promise.resolve()
   }
@@ -133,10 +133,11 @@ test('signIn happy path dispatches signInSuccess action', function (t) {
   t.plan(2)
   var i = 0
   var creds = {}
+  const cid = Symbol('cid')
   const action$ = ActionsObservable.from([
-    signIn(creds)
+    signIn(cid, creds)
   ])
-  const expectedAction = signInSuccess(creds)
+  const expectedAction = signInSuccess(cid, creds)
   const feathers = {
     authenticate: (creds) => Promise.resolve(creds)
   }
@@ -153,10 +154,11 @@ test('signIn unhappy path dispatches signInError', function (t) {
   t.plan(2)
   var i = 0
   var err = {}
+  const cid = Symbol('cid')
   const action$ = ActionsObservable.from([
-    signIn()
+    signIn(cid)
   ])
-  const expectedAction = signInError(err)
+  const expectedAction = signInError(cid, err)
   const feathers = {
     authenticate: (creds) => Promise.reject(err)
   }
@@ -169,17 +171,18 @@ test('signIn unhappy path dispatches signInError', function (t) {
     })
 })
 
-test('signOut dispatches signOutStart action', function (t) {
+test('logOut dispatches logOutStart action', function (t) {
   t.plan(2)
   var i = 0
+  const cid = Symbol('cid')
   const action$ = ActionsObservable.from([
-    signOut()
+    logOut(cid)
   ])
-  const expectedAction = signOutStart()
+  const expectedAction = logOutStart(cid)
   const feathers = {
     logout: () => Promise.resolve()
   }
-  return signOutEpic(action$, {}, { feathers })
+  return logOutEpic(action$, {}, { feathers })
     .do(actualAction => {
       if (i++ === 0) {
         t.deepEqual(actualAction, expectedAction)
@@ -188,18 +191,18 @@ test('signOut dispatches signOutStart action', function (t) {
     })
 })
 
-test('signOut happy path dispatches signOutSuccess action', function (t) {
+test('logOut happy path dispatches logOutSuccess action', function (t) {
   t.plan(2)
   var i = 0
-  var result = {}
+  const cid = Symbol('cid')
   const action$ = ActionsObservable.from([
-    signOut()
+    logOut(cid)
   ])
-  const expectedAction = signOutSuccess(result)
+  const expectedAction = logOutSuccess(cid)
   const feathers = {
-    logout: () => Promise.resolve(result)
+    logout: () => Promise.resolve()
   }
-  return signOutEpic(action$, {}, { feathers })
+  return logOutEpic(action$, {}, { feathers })
     .do(actualAction => {
       if (i++ === 1) {
         t.deepEqual(actualAction, expectedAction)
@@ -208,18 +211,19 @@ test('signOut happy path dispatches signOutSuccess action', function (t) {
     })
 })
 
-test('signOut unhappy path dispatches signOutError', function (t) {
+test('logOut unhappy path dispatches logOutError', function (t) {
   t.plan(2)
   var i = 0
   var err = {}
+  const cid = Symbol('cid')
   const action$ = ActionsObservable.from([
-    signOut()
+    logOut(cid)
   ])
-  const expectedAction = signOutError(err)
+  const expectedAction = logOutError(cid, err)
   const feathers = {
     logout: (creds) => Promise.reject(err)
   }
-  return signOutEpic(action$, {}, { feathers })
+  return logOutEpic(action$, {}, { feathers })
     .do(actualAction => {
       if (i++ === 1) {
         t.deepEqual(actualAction, expectedAction)

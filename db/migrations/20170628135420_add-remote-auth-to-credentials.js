@@ -4,9 +4,8 @@ exports.up = function (knex, Promise) {
     table.string('facebookId').unique()
     table.string('githubId').unique()
     table.string('twitterId').unique()
-  }) 
+  })
 }
-
 
 exports.down = function (knex, Promise) {
   return knex.schema.table('credentials', function (table) {
@@ -14,5 +13,5 @@ exports.down = function (knex, Promise) {
     table.dropColumn('facebookId')
     table.dropColumn('githubId')
     table.dropColumn('twitterId')
-  }) 
+  })
 }

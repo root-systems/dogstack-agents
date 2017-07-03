@@ -1,4 +1,4 @@
-import { createSelector, createStructuredSelector } from 'reselect'
+import { createSelector } from 'reselect'
 
 import getCredential from './getCredential'
 

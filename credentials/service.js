@@ -1,7 +1,6 @@
 const feathersKnex = require('feathers-knex')
 const { hashPassword } = require('feathers-authentication-local').hooks
 const { isProvider: isTransport, iff, discard } = require('feathers-hooks-common')
-const omit = require('ramda/src/omit')
 
 module.exports = function () {
   const app = this
@@ -48,7 +47,6 @@ function getEmailFromRemote (hook) {
   return hook
 }
 
-
 function createAgent (hook) {
   const agents = hook.app.service('agents')
 
@@ -60,7 +58,6 @@ function createAgent (hook) {
     return hook
   })
 }
-
 
 function createProfile (hook) {
   const profiles = hook.app.service('profiles')
@@ -94,8 +91,6 @@ function createProfile (hook) {
 function clearRemoteData (hook) {
   if (hook.params.oauth) {
     const remoteProvider = hook.params.oauth.provider
-    //const omitRemoteData = omit([remoteProvider])
-    //hook.data = omitRemoteData(hook.data)
     delete hook.data[remoteProvider]
   }
   return hook

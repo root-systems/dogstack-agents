@@ -1,75 +1,82 @@
 import test from 'ava'
 import freeze from 'deep-freeze'
-import updater, { localUpdater } from '../updater'
+import { localUpdater } from '../updater'
 import {
-  signIn,
+//  signIn,
   signInStart,
   signInSuccess,
   signInError,
-  signOut,
-  signOutStart,
-  signOutSuccess,
-  signOutError,
+  logOut,
+//  logOutStart,
+//  logOutSuccess,
+//  logOutError,
+//  register,
   registerStart,
   registerSuccess,
-  registerError,
-  register
+  registerError
 } from '../actions'
 
 test('REGISTER_START', function (t) {
+  const cid = Symbol('cid')
   const initialState = {}
   freeze(initialState)
-  const newState = localUpdater(registerStart())(initialState)
-  t.deepEqual(newState.account, initialState)
+  const newState = localUpdater(registerStart(cid))(initialState)
+  t.is(newState.credential, null)
   t.true(newState.isRegistering)
 })
 
 test('REGISTER_SUCCESS', function (t) {
+  const cid = Symbol('cid')
   const initialState = {}
   freeze(initialState)
-  const newAccount = {name: 'test', email: 'derp@dog.com', id: 1}
-  const newState = localUpdater(registerSuccess(newAccount))(initialState)
-  t.deepEqual(newState.account, newAccount)
+  const newcredential = {name: 'test', email: 'derp@dog.com', id: 1}
+  const newState = localUpdater(registerSuccess(cid, newcredential))(initialState)
+  t.deepEqual(newState.credential, newcredential)
   t.false(newState.isRegistering)
 })
 
 test('REGISTER_ERROR', function (t) {
+  const cid = Symbol('cid')
   const initialState = {}
   const error = 'bang!'
   freeze(initialState)
-  const newState = localUpdater(registerError(error))(initialState)
-  t.is(newState.error, error)
+  const newState = localUpdater(registerError(cid, error))(initialState)
+  t.is(newState.registerError, error)
 })
 
 test('SIGN_IN_SUCCESS', function (t) {
+  const cid = Symbol('cid')
   const initialState = {}
   freeze(initialState)
-  const newAccount = {name: 'test', email: 'derp@dog.com'}
-  const newState = localUpdater(signInSuccess(newAccount))(initialState)
-  t.is(newState.account, newAccount)
+  const newcredential = {name: 'test', email: 'derp@dog.com'}
+  const newState = localUpdater(signInSuccess(cid, newcredential))(initialState)
+  t.is(newState.credential, newcredential)
   t.false(newState.isSigningIn)
 })
 
-test('SIGN_OUT', function (t) {
+test('LOG_OUT', function (t) {
+  const cid = Symbol('cid')
   const initialState = {name: 'test', email: 'derp@dog.com'}
   freeze(initialState)
-  const newState = localUpdater(signOut())(initialState)
-  t.deepEqual(newState.account, {})
+  const newState = localUpdater(logOut(cid))(initialState)
+  t.is(newState.credential, null)
 })
 
 test('SIGN_IN_ERROR', function (t) {
+  const cid = Symbol('cid')
   const initialState = {}
   const error = 'bang!'
   freeze(initialState)
-  const newState = localUpdater(signInError(error))(initialState)
-  t.is(newState.error, error)
+  const newState = localUpdater(signInError(cid, error))(initialState)
+  t.is(newState.signInError, error)
   t.false(newState.isSigningIn)
 })
 
 test('SIGN_IN_START', function (t) {
+  const cid = Symbol('cid')
   const initialState = {}
   freeze(initialState)
-  const newState = localUpdater(signInStart())(initialState)
-  t.deepEqual(newState.account, initialState)
+  const newState = localUpdater(signInStart(cid))(initialState)
+  t.is(newState.credential, null)
   t.true(newState.isSigningIn)
 })

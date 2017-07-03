@@ -52,7 +52,7 @@ export function registerEpic (action$, store, deps) {
   return action$.ofType(register.type)
     .switchMap(action => {
       const { payload } = action
-      const { name, email, password } = payload
+      const { email, password } = payload
       const { cid } = action.meta
 
       const createdSuccess$ = action$.ofType(credentials.complete.type).filter(onlyCid).take(1)
