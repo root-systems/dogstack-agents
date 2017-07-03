@@ -4,7 +4,7 @@ dogstack plugin to provide core user functionality
 
 - [agents](https://en.wikipedia.org/wiki/Multi-agent_system) (people, groups, or bots)
 - [credentials](https://en.wikipedia.org/wiki/Credential#Information_technology)
-- TODO profiles
+- [profiles](https://en.wikipedia.org/wiki/User_profile)
 - TODO relationships
 - [authentication](https://en.wikipedia.org/wiki/Authentication)
 - [authorization](https://en.wikipedia.org/wiki/Authorization)
@@ -29,7 +29,11 @@ after uninstall, this module should unlink these linked migrations.
 
 ## usage
 
-### `{ service, actions, updater, epic, ...getters, ...components, ...hoc } = require('dogstack-agents')`
+### `{ config, service, actions, updater, epic, ...getters, ...components, ...hoc } = require('dogstack-agents')`
+
+### `config`
+
+default config to merge in with `config/default.js`.
 
 ### `service`
 
@@ -39,6 +43,7 @@ combines
 
 - [`./agents/service.js`](./agents/service.js)
 - [`./credentials/service.js`](./credentials/service.js)
+- [`./profiles/service.js`](./profiles/service.js)
 - [`./authentication/service.js`](./authentication/service.js)
 
 ### `actions`
@@ -49,6 +54,7 @@ exports `{ agents, credentials, authentication }` action creators from
 
 - [`./agents/index.js`](./agents/index.js) `actions` from [`feathers-action`](https://github.com/ahdinosaur/feathers-action)
 - [`./credentials/index.js`](./credentials/index.js) `actions` from [`feathers-action`](https://github.com/ahdinosaur/feathers-action)
+- [`./profiles/index.js`](./profiles/index.js) `actions` from [`feathers-action`](https://github.com/ahdinosaur/feathers-action)
 - [`./authentication/actions.js`](./authentication/actions.js)
 
 ### `updater`
@@ -59,6 +65,7 @@ concats
 
 - [`./agents/index.js`](./agents/index.js) `updater` from [`feathers-action`](https://github.com/ahdinosaur/feathers-action)
 - [`./credentials/index.js`](./credentials/index.js) `updater` from [`feathers-action`](https://github.com/ahdinosaur/feathers-action)
+- [`./profiles/index.js`](./profiles/index.js) `updater` from [`feathers-action`](https://github.com/ahdinosaur/feathers-action)
 - [`./authentication/updater.js`](./authentication/updater.js)
 
 ### `epic`
@@ -69,6 +76,7 @@ combines
 
 - [`./agents/index.js`](./agents/index.js) `epic` from [`feathers-action`](https://github.com/ahdinosaur/feathers-action)
 - [`./credentials/index.js`](./credentials/index.js) `epic` from [`feathers-action`](https://github.com/ahdinosaur/feathers-action)
+- [`./profiles/index.js`](./profiles/index.js) `epic` from [`feathers-action`](https://github.com/ahdinosaur/feathers-action)
 - [`./authentication/epic.js`](./authentication/epic.js)
 
 ### `getters`
@@ -80,13 +88,16 @@ exports the following getters
 - [`getAgents`](./agents/getters/getAgents.js)
 - [`getCredentials`](./credentials/getters/getCredentials.js)
 - [`getAuthentication`](./authentication/getters/getAuthentication.js)
+- [`getAuthenticationConfig`](./authentication/getters/getAuthenticationConfig.js)
 - [`getCredential`](./authentication/getters/getCredential.js)
 - [`getAccessToken`](./authentication/getters/getAccessToken.js)
 - [`getSigningIn`](./authentication/getters/getSigningIn.js)
 - [`getIsAuthenticated`](./authentication/getters/getIsAuthenticated.js)
 - [`getIsNotAuthenticated`](./authentication/getters/getIsNotAuthenticated.js)
 - [`getRegisterError`](./authentication/getters/getRegisterError.js)
+- [`getRegisterProps`](./authentication/getters/getRegisterProps.js)
 - [`getSignInError`](./authentication/getters/getSignInError.js)
+- [`getSignInProps`](./authentication/getters/getSignInProps.js)
 
 ### `components`
 
