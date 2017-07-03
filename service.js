@@ -1,7 +1,8 @@
 const services = [
   require('./agents/service'),
-  require('./accounts/service'),
-  require('./authentication/service')
+  require('./credentials/service'),
+  require('./authentication/service'),
+  require('./profiles/service')
 ]
 
 module.exports = function () {

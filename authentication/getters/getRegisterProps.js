@@ -1,9 +1,9 @@
 import { createStructuredSelector } from 'reselect'
 
-import getSignInError from './getSignInError'
+import getRegisterError from './getRegisterError'
 import getAuthenticationConfig from './getAuthenticationConfig'
 
 export default createStructuredSelector({
   config: getAuthenticationConfig,
-  error: getSignInError
+  error: getRegisterError
 })

@@ -1,3 +1,4 @@
+export { default as config } from './config'
 export { default as service } from './service'
 import * as actions from './actions'
 export { actions }

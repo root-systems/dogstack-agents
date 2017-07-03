@@ -1,9 +1,9 @@
 import { createSelector } from 'reselect'
 import { propOr } from 'ramda'
 
-import getCredential from './getCredential'
+import getAuthentication from './getAuthentication'
 
 export default createSelector(
-  getCredential,
-  propOr(null, 'accessToken')
+  getAuthentication,
+  propOr(null, 'signInError')
 )

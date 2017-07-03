@@ -2,13 +2,13 @@ import locationHelperBuilder from 'redux-auth-wrapper/lib/history4/locationHelpe
 import { connectedRouterRedirect } from 'redux-auth-wrapper/lib/history4/redirect'
 import { pipe, propOr, not } from 'ramda'
 
-import { getAccount } from '../getters'
+import getCredential from '../getters/getCredential'
 
 const locationHelper = locationHelperBuilder({})
 
 export default connectedRouterRedirect({
   wrapperDisplayName: 'UserIsNotAuthenticated',
-  authSelector: getAccount,
+  authSelector: getCredential,
   predicate: pipe(propOr(null, 'accessToken'), not),
   redirectPath: (state, ownProps) => locationHelper.getRedirectQuery(ownProps) || '/',
   allowRedirectBack: false

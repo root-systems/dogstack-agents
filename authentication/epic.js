@@ -1,75 +1,82 @@
 import { combineEpics } from 'redux-observable'
 import Rx from 'rxjs'
+import createCid from 'incremental-id'
+import { push } from 'react-router-redux'
 
-import { actions as accounts } from '../accounts'
+import { actions as credentials } from '../credentials'
 import {
   signIn, signInStart, signInSuccess, signInError,
-  signOut, signOutStart, signOutSuccess, signOutError,
+  logOut, logOutStart, logOutSuccess, logOutError,
   register, registerStart, registerSuccess, registerError
 } from './actions'
 
-export default combineEpics(initEpic, signInEpic, signOutEpic, registerEpic)
+export default combineEpics(initEpic, signInEpic, logOutEpic, registerEpic)
 
 export function initEpic () {
-  return Rx.Observable.of(signIn())
+  return Rx.Observable.of(signIn(createCid()))
     .delay(0) // apparently needs delay otherwise action lost
 }
 
 export function signInEpic (action$, store, { feathers }) {
   return action$.ofType(signIn.type)
-    .mergeMap(action => Rx.Observable.concat(
-      Rx.Observable.of(signInStart()),
+    .switchMap(({ payload, meta: { cid } }) => Rx.Observable.concat(
+      Rx.Observable.of(signInStart(cid)),
       Rx.Observable.fromPromise(
-        feathers.authenticate(action.payload)
-          .then(signInSuccess)
+        feathers.authenticate(payload)
+          .then((result) => signInSuccess(cid, result))
         )
         // can't swallow error as part of promise chain
         // because we want to not emit an action, rather than undefined.
         .catch((err) => {
           // if init signIn() fails, it's not an error
           if (err.message === 'Could not find stored JWT and no authentication strategy was given') return Rx.Observable.empty()
-          return Rx.Observable.of(signInError(err))
+          return Rx.Observable.of(signInError(cid, err))
         })
     ))
 }
 
-export function signOutEpic (action$, store, { feathers }) {
-  return action$.ofType(signOut.type)
-    .mergeMap(action => Rx.Observable.concat(
-      Rx.Observable.of(signOutStart()),
+export function logOutEpic (action$, store, { feathers }) {
+  return action$.ofType(logOut.type)
+    .switchMap(({ meta: { cid } }) => Rx.Observable.concat(
+      Rx.Observable.of(logOutStart(cid)),
       Rx.Observable.fromPromise(
         feathers.logout()
-          .then(signOutSuccess)
-          .catch(signOutError)
-        )
+          .then(() => logOutSuccess(cid))
+      )
+        .concat(Rx.Observable.of(push('/'))) // TODO this should be configurable
+        .catch((err) => Rx.Observable.of(logOutError(cid, err)))
     ))
 }
 
 export function registerEpic (action$, store, deps) {
   return action$.ofType(register.type)
-    .mergeMap(action => {
+    .switchMap(action => {
+      const { payload } = action
+      const { email, password } = payload
       const { cid } = action.meta
 
-      const createdSuccess$ = action$.ofType(accounts.complete.type).filter(onlyCid).take(1)
-      const createdError$ = action$.ofType(accounts.error.type).filter(onlyCid).take(1)
+      const createdSuccess$ = action$.ofType(credentials.complete.type).filter(onlyCid).take(1)
+      const createdError$ = action$.ofType(credentials.error.type).filter(onlyCid).take(1)
       // get only the last set item, since it should be the latest
-      const createdSet$ = action$.ofType(accounts.set.type).filter(onlyCid)
+      const createdSet$ = action$.ofType(credentials.set.type).filter(onlyCid)
+      const signInSuccess$ = action$.ofType(signInSuccess.type).filter(onlyCid).take(1)
 
+      // TODO create initial profile with name
       return Rx.Observable.merge(
         Rx.Observable.of(
-          registerStart(),
-          accounts.create(action.meta.cid, action.payload)
+          registerStart(cid),
+          credentials.create(cid, { email, password })
         ),
         createdSuccess$
-        .withLatestFrom(createdSet$, (success, set) => set.payload.data)
-        .mergeMap(created => {
-          const { email, password } = action.payload
-          return Rx.Observable.of(
-            registerSuccess(created),
-            signIn({ strategy: 'local', email, password })
-          )
-        }),
-        createdError$.map(action => registerError(action.payload))
+          .withLatestFrom(createdSet$, (success, set) => set.payload.data)
+          .mergeMap(created => {
+            return Rx.Observable.of(
+              registerSuccess(cid, created),
+              signIn(cid, { strategy: 'local', email, password })
+            )
+          }),
+        createdError$.map(action => registerError(cid, action.payload)),
+        signInSuccess$.mapTo(push('/')) // TODO this should be configurable
       )
 
       function onlyCid (action) {
