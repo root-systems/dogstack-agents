@@ -64,4 +64,4 @@ const getBrowserConfig = pipe(
 
 config.browser = getBrowserConfig(config)
 
-export default config
+module.exports = config
