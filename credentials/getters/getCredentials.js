@@ -1,3 +1,8 @@
-import { prop } from 'ramda'
+import { createSelector } from 'reselect'
 
-export default prop('credentials')
+import getRawCredentials from './getRawCredentials'
+
+export default createSelector(
+  getRawCredentials,
+  (credentials) => credentials
+)

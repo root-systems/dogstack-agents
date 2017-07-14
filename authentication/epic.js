@@ -3,7 +3,9 @@ import Rx from 'rxjs'
 import createCid from 'incremental-id'
 import { push } from 'react-router-redux'
 
+import { actions as agents } from '../agents'
 import { actions as credentials } from '../credentials'
+import { actions as profiles } from '../profiles'
 import {
   signIn, signInStart, signInSuccess, signInError,
   logOut, logOutStart, logOutSuccess, logOutError,
@@ -23,8 +25,20 @@ export function signInEpic (action$, store, { feathers }) {
       Rx.Observable.of(signInStart(cid)),
       Rx.Observable.fromPromise(
         feathers.authenticate(payload)
-          .then((result) => signInSuccess(cid, result))
+          .then(({ accessToken }) => {
+            return feathers.passport.verifyJWT(accessToken)
+              .then(({ credentialId }) => {
+                return { accessToken, credentialId }
+              })
+          })
         )
+        .mergeMap(({ accessToken, credentialId }) => {
+          return Rx.Observable.concat(
+            Rx.Observable.of(signInSuccess(cid, { accessToken, credentialId })),
+            fetchAgentByCredential(action$, cid, credentialId)
+          )
+        })
+        //.mergeMap(actions => Rx.Observable.of(...actions))
         // can't swallow error as part of promise chain
         // because we want to not emit an action, rather than undefined.
         .catch((err) => {
@@ -83,4 +97,28 @@ export function registerEpic (action$, store, deps) {
         return action.meta.cid === cid
       }
     })
+}
+
+function fetchAgentByCredential (action$, cid, credentialId) {
+  const agentSet$ = action$.ofType(agents.set.type).filter(onlyCid)
+  const credentialSet$ = action$.ofType(credentials.set.type).filter(onlyCid)
+  const profileSet$ = action$.ofType(profiles.set.type).filter(onlyCid)
+
+  return Rx.Observable.merge(
+    Rx.Observable.of(credentials.get(cid, credentialId)),
+    credentialSet$.mergeMap(action => {
+      const { agentId } = action.payload.data
+      return Rx.Observable.of(
+        credentials.complete(cid),
+        agents.get(cid, agentId),
+        profiles.find(cid, { query: { agentId } })
+      )
+    }),
+    profileSet$.map(() => profiles.complete(cid)),
+    agentSet$.map(() => agents.complete(cid))
+  )
+
+  function onlyCid (action) {
+    return action.meta.cid === cid
+  }
 }

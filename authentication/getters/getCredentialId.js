@@ -5,5 +5,5 @@ import getAuthentication from './getAuthentication'
 
 export default createSelector(
   getAuthentication,
-  propOr(null, 'credential')
+  propOr(null, 'credentialId')
 )

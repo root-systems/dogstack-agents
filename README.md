@@ -86,10 +86,14 @@ combines
 exports the following getters
 
 - [`getAgents`](./agents/getters/getAgents.js)
+- [`getCurrentAgent`](./agents/getters/getCurrentAgent.js)
 - [`getCredentials`](./credentials/getters/getCredentials.js)
+- [`getCredentialByAgent`](./credentials/getters/getCredentialByAgent.js)
+- [`getProfiles`](./profiles/getters/getProfiles.js)
+- [`getProfileByAgent`](./profiles/getters/getProfileByAgent.js)
 - [`getAuthentication`](./authentication/getters/getAuthentication.js)
 - [`getAuthenticationConfig`](./authentication/getters/getAuthenticationConfig.js)
-- [`getCredential`](./authentication/getters/getCredential.js)
+- [`getCredentialId`](./authentication/getters/getCredentialId.js)
 - [`getAccessToken`](./authentication/getters/getAccessToken.js)
 - [`getSigningIn`](./authentication/getters/getSigningIn.js)
 - [`getIsAuthenticated`](./authentication/getters/getIsAuthenticated.js)
