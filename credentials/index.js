@@ -1,8 +1,8 @@
 const createModule = require('feathers-action')
 
-const module = createModule('credentials')
+const dux = createModule('credentials')
 
-export default module
-export const actions = module.actions
-export const updater = module.updater
-export const epic = module.epic
+export default dux
+export const actions = dux.actions
+export const updater = dux.updater
+export const epic = dux.epic
