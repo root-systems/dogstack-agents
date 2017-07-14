@@ -1,12 +1,11 @@
 import { connectedRouterRedirect } from 'redux-auth-wrapper/lib/history4/redirect'
-import { propOr } from 'ramda'
 
-import getCredential from '../getters/getCredential'
+import getIsAuthenticated from '../getters/getIsAuthenticated'
 
 export default connectedRouterRedirect({
   wrapperDisplayName: 'UserIsAuthenticated',
-  authSelector: getCredential,
-  predicate: propOr(null, 'accessToken'),
+  authSelector: getIsAuthenticated,
+  predicate: Boolean,
   redirectPath: '/sign-in',
   allowRedirectBack: true
 })
