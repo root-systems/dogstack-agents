@@ -1,9 +1,6 @@
 import { createSelector } from 'reselect'
-import { not } from 'ramda'
+import { complement } from 'ramda'
 
-import getCredential from './getCredential'
+import getIsAuthenticated from './getIsAuthenticated'
 
-export default createSelector(
-  getCredential,
-  not
-)
+export default complement(getIsAuthenticated)

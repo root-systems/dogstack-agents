@@ -1,8 +1,8 @@
 import { createSelector } from 'reselect'
 
-import getCredential from './getCredential'
+import getCredentialId from './getCredentialId'
 
 export default createSelector(
-  getCredential,
+  getCredentialId,
   Boolean
 )
