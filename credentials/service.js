@@ -17,8 +17,8 @@ const hooks = {
   before: {
     create: [
       hashPassword(),
+      setProfileData,
       createAgent,
-      createProfile,
       getEmailFromRemote,
       clearRemoteData
     ]
@@ -52,17 +52,28 @@ function createAgent (hook) {
 
   if (!hook.data) return Promise.resolve(hook)
 
-  return agents.create({})
+  const data = {
+    profile: hook.data.profile
+  }
+  delete hook.data.profile
+
+  return agents.create(data)
   .then(agent => {
     hook.data.agentId = agent.id
     return hook
   })
 }
 
-function createProfile (hook) {
-  const profiles = hook.app.service('profiles')
+function clearRemoteData (hook) {
+  if (hook.params.oauth) {
+    const remoteProvider = hook.params.oauth.provider
+    delete hook.data[remoteProvider]
+  }
+  return hook
+}
 
-  if (!hook.data) return Promise.resolve(hook)
+function setProfileData (hook) {
+  if (!hook.data) return hook
 
   var name, avatar
 
@@ -77,22 +88,12 @@ function createProfile (hook) {
   }
 
   const { agentId } = hook.data
-
-  return profiles.create({
-    agentId,
+  
+  hook.data.profile = {
     name,
     avatar
-  })
-  .then(profile => {
-    return hook
-  })
-}
-
-function clearRemoteData (hook) {
-  if (hook.params.oauth) {
-    const remoteProvider = hook.params.oauth.provider
-    delete hook.data[remoteProvider]
   }
+
   return hook
 }
 
