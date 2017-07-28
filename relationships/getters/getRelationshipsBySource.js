@@ -11,4 +11,4 @@ const getRelationshipsBySource = createSelector(
   )
 )
 
-modules.export = getRelationshipsBySource
+module.exports = getRelationshipsBySource
