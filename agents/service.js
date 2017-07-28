@@ -93,8 +93,8 @@ function createRelationship (hook) {
   var { relationship = {}, contextAgent = {} } = hook.params
 
   relationship = merge(relationship, {
-    source: contextAgent.id,
-    target: agent.id
+    sourceId: contextAgent.id,
+    targetId: agent.id
   })
 
   return relationships.create(relationship)
