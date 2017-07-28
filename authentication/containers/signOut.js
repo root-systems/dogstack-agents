@@ -1,10 +1,10 @@
-import { connect } from 'react-redux'
+const { connect } = require('react-redux')
 
-import SignOut from '../components/signOut'
+const SignOut = require('../components/signOut')
 
-import { signOut } from '../actions'
+const { signOut } = require('../actions')
 
-export default connect(
+module.exports = connect(
   null,
   { signOut }
 )(SignOut)

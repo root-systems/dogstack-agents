@@ -1,4 +1,4 @@
-export { actions as agents } from './agents'
-export { actions as credentials } from './credentials'
-export { actions as profiles } from './profiles'
-export { actions as authentication } from './authentication'
+exports.agents = require('./agents').actions
+exports.credentials = require('./credentials').actions
+exports.profiles = require('./profiles').actions
+exports.authentication = require('./authentication').actions

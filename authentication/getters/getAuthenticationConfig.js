@@ -1,3 +1,3 @@
-import { path } from 'ramda'
+const { path } = require('ramda')
 
-export default path(['config', 'authentication'])
+module.exports = path(['config', 'authentication'])

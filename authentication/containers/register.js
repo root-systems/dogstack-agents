@@ -1,10 +1,10 @@
-import { connect } from 'react-redux'
+const { connect } = require('react-redux')
 
-import Register from '../components/register'
+const Register = require('../components/register')
 
-import { register } from '../actions'
+const { register } = require('../actions')
 
-export default connect(
+module.exports = connect(
   null,
   { register }
 )(Register)

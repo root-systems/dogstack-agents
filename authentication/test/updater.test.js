@@ -1,7 +1,7 @@
-import test from 'ava'
-import freeze from 'deep-freeze'
-import { localUpdater } from '../updater'
-import {
+const test = require('ava')
+const freeze = require('deep-freeze')
+const { localUpdater } = require('../updater')
+const {
 //  signIn,
   signInStart,
   signInSuccess,
@@ -14,7 +14,7 @@ import {
   registerStart,
   registerSuccess,
   registerError
-} from '../actions'
+} = require('../actions')
 
 test('REGISTER_START', function (t) {
   const cid = Symbol('cid')

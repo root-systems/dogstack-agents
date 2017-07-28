@@ -1,9 +1,9 @@
-import { createStructuredSelector } from 'reselect'
+const { createStructuredSelector } = require('reselect')
 
-import getRegisterError from './getRegisterError'
-import getAuthenticationConfig from './getAuthenticationConfig'
+const getRegisterError = require('./getRegisterError')
+const getAuthenticationConfig = require('./getAuthenticationConfig')
 
-export default createStructuredSelector({
+module.exports = createStructuredSelector({
   config: getAuthenticationConfig,
   error: getRegisterError
 })

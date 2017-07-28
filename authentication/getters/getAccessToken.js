@@ -1,9 +1,9 @@
-import { createSelector } from 'reselect'
-import { propOr } from 'ramda'
+const { createSelector } = require('reselect')
+const { propOr } = require('ramda')
 
-import getAuthentication from './getAuthentication'
+const getAuthentication = require('./getAuthentication')
 
-export default createSelector(
+module.exports = createSelector(
   getAuthentication,
   propOr(null, 'accessToken')
 )

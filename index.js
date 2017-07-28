@@ -1,9 +1,8 @@
-export { default as config } from './config'
-export { default as service } from './service'
-import * as actions from './actions'
-export { actions }
-export { default as updater } from './updater'
-export { default as epic } from './epic'
-export * from './getters'
-export * from './components'
-export * from './hoc'
+exports.config = require('./config')
+exports.service = require('./service')
+exports.actions = require('./actions')
+exports.updater = require('./updater')
+exports.epic = require('./epic')
+Object.assign(exports, require('./getters'))
+Object.assign(exports, require('./components'))
+Object.assign(exports, require('./hoc'))

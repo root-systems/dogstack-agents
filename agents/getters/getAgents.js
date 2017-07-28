@@ -1,11 +1,11 @@
-import { uncurryN, merge, map } from 'ramda'
-import { createSelector } from 'reselect'
+const { uncurryN, merge, map } = require('ramda')
+const { createSelector } = require('reselect')
 
-import getCredentialByAgent from '../../credentials/getters/getCredentialByAgent'
-import getProfileByAgent from '../../profiles/getters/getProfileByAgent'
-import getRawAgents from './getRawAgents'
+const getCredentialByAgent = require('../../credentials/getters/getCredentialByAgent')
+const getProfileByAgent = require('../../profiles/getters/getProfileByAgent')
+const getRawAgents = require('./getRawAgents')
 
-export default createSelector(
+module.exports = createSelector(
   getCredentialByAgent,
   getProfileByAgent,
   getRawAgents,

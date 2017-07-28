@@ -1,16 +1,17 @@
-export { default as getAgents } from './agents/getters/getAgents'
-export { default as getCurrentAgent } from './agents/getters/getCurrentAgent'
-export { default as getCredentials } from './credentials/getters/getCredentials'
-export { default as getCredentialByAgent } from './credentials/getters/getCredentialByAgent'
-export { default as getProfiles } from './profiles/getters/getProfiles'
-export { default as getProfileByAgent } from './profiles/getters/getProfileByAgent'
-export { default as getAuthentication } from './authentication/getters/getAuthentication'
-export { default as getCredentialId } from './authentication/getters/getCredentialId'
-export { default as getAccessToken } from './authentication/getters/getAccessToken'
-export { default as getSigningIn } from './authentication/getters/getSigningIn'
-export { default as getIsAuthenticated } from './authentication/getters/getIsAuthenticated'
-export { default as getIsNotAuthenticated } from './authentication/getters/getIsNotAuthenticated'
-export { default as getSignInError } from './authentication/getters/getSignInError'
-export { default as getRegisterError } from './authentication/getters/getRegisterError'
-export { default as getSignInProps } from './authentication/getters/getSignInProps'
-export { default as getRegisterProps } from './authentication/getters/getRegisterProps'
+exports.getAgents = require('./agents/getters/getAgents')
+exports.getAgents = require('./agents/getters/getAgents')
+exports.getCurrentAgent = require('./agents/getters/getCurrentAgent')
+exports.getCredentials = require('./credentials/getters/getCredentials')
+exports.getCredentialByAgent = require('./credentials/getters/getCredentialByAgent')
+exports.getProfiles = require('./profiles/getters/getProfiles')
+exports.getProfileByAgent = require('./profiles/getters/getProfileByAgent')
+exports.getAuthentication = require('./authentication/getters/getAuthentication')
+exports.getCredentialId = require('./authentication/getters/getCredentialId')
+exports.getAccessToken = require('./authentication/getters/getAccessToken')
+exports.getSigningIn = require('./authentication/getters/getSigningIn')
+exports.getIsAuthenticated = require('./authentication/getters/getIsAuthenticated')
+exports.getIsNotAuthenticated = require('./authentication/getters/getIsNotAuthenticated')
+exports.getSignInError = require('./authentication/getters/getSignInError')
+exports.getRegisterError = require('./authentication/getters/getRegisterError')
+exports.getSignInProps = require('./authentication/getters/getSignInProps')
+exports.getRegisterProps = require('./authentication/getters/getRegisterProps')

@@ -1,11 +1,11 @@
-import { connect } from 'react-redux'
+const { connect } = require('react-redux')
 
-import SignIn from '../components/signIn'
+const SignIn = require('../components/signIn')
 
-import { signIn } from '../actions'
-import getSignInProps from '../getters/getSignInProps'
+const { signIn } = require('../actions')
+const getSignInProps = require('../getters/getSignInProps')
 
-export default connect(
+module.exports = connect(
   getSignInProps,
   {signIn}
 )(SignIn)

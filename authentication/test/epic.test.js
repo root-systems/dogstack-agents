@@ -1,13 +1,13 @@
-import test from 'ava'
-import { Observable, Scheduler } from 'rxjs'
-import { ActionsObservable } from 'redux-observable'
-import {
+const test = require('ava')
+const { Observable, Scheduler } = require('rxjs')
+const { ActionsObservable } = require('redux-observable')
+const {
   signInEpic,
   logOutEpic,
   registerEpic
 //  initEpic
-} from '../epic'
-import {
+} = require('../epic')
+const {
   signIn,
   signInStart,
   signInSuccess,
@@ -20,8 +20,8 @@ import {
   registerSuccess,
   registerError,
   register
-} from '../actions'
-import { actions as credentialActions } from '../../credentials'
+} = require('../actions')
+const { actions as credentialActions } = require('../../credentials')
 
 test('register dispatches registerStart and credentials.create action', function (t) {
   t.plan(3)

@@ -1,3 +1,3 @@
-import { prop } from 'ramda'
+const { prop } = require('ramda')
 
-export default prop('credentials')
+module.exports = prop('credentials')

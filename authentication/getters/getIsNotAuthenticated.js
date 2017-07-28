@@ -1,6 +1,6 @@
-import { createSelector } from 'reselect'
-import { complement } from 'ramda'
+const { createSelector } = require('reselect')
+const { complement } = require('ramda')
 
-import getIsAuthenticated from './getIsAuthenticated'
+const getIsAuthenticated = require('./getIsAuthenticated')
 
-export default complement(getIsAuthenticated)
+module.exports = complement(getIsAuthenticated)

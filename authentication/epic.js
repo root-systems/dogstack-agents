@@ -1,25 +1,27 @@
-import { combineEpics } from 'redux-observable'
-import Rx from 'rxjs'
-import createCid from 'incremental-id'
-import { push } from 'react-router-redux'
+const { combineEpics } = require('redux-observable')
+const Rx = require('rxjs')
+const createCid = require('incremental-id')
+const { push } = require('react-router-redux')
 
-import { actions as agents } from '../agents'
-import { actions as credentials } from '../credentials'
-import { actions as profiles } from '../profiles'
-import {
+const { actions: agents } = require('../agents')
+const { actions: credentials } = require('../credentials')
+const { actions: profiles } = require('../profiles')
+const {
   signIn, signInStart, signInSuccess, signInError,
   logOut, logOutStart, logOutSuccess, logOutError,
   register, registerStart, registerSuccess, registerError
-} from './actions'
+} = require('./actions')
 
-export default combineEpics(initEpic, signInEpic, logOutEpic, registerEpic)
+module.exports = combineEpics(initEpic, signInEpic, logOutEpic, registerEpic)
 
-export function initEpic () {
+exports.initEpic = initEpic
+function initEpic () {
   return Rx.Observable.of(signIn(createCid()))
     .delay(0) // apparently needs delay otherwise action lost
 }
 
-export function signInEpic (action$, store, { feathers }) {
+exports.signInEpic = signInEpic
+function signInEpic (action$, store, { feathers }) {
   return action$.ofType(signIn.type)
     .switchMap(({ payload, meta: { cid } }) => Rx.Observable.concat(
       Rx.Observable.of(signInStart(cid)),
@@ -49,7 +51,8 @@ export function signInEpic (action$, store, { feathers }) {
     ))
 }
 
-export function logOutEpic (action$, store, { feathers }) {
+exports.logOutEpic = logOutEpic
+function logOutEpic (action$, store, { feathers }) {
   return action$.ofType(logOut.type)
     .switchMap(({ meta: { cid } }) => Rx.Observable.concat(
       Rx.Observable.of(logOutStart(cid)),
@@ -62,7 +65,8 @@ export function logOutEpic (action$, store, { feathers }) {
     ))
 }
 
-export function registerEpic (action$, store, deps) {
+exports.registerEpic = registerEpic
+function registerEpic (action$, store, deps) {
   return action$.ofType(register.type)
     .switchMap(action => {
       const { payload } = action
@@ -98,6 +102,7 @@ export function registerEpic (action$, store, deps) {
       }
     })
 }
+
 
 function fetchAgentByCredential (action$, cid, credentialId) {
   const agentSet$ = action$.ofType(agents.set.type).filter(onlyCid)

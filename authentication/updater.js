@@ -1,4 +1,4 @@
-import { updateStateAt, combine, withDefaultState, decorate } from 'redux-fp'
+const { updateStateAt, combine, withDefaultState, decorate } = require('redux-fp')
 
 const accessToken = action => (state = null) => {
   switch (action.type) {
@@ -70,7 +70,7 @@ const registerError = action => (state = null) => {
   }
 }
 
-export const localUpdater = decorate(
+const localUpdater = decorate(
   withDefaultState({}),
   combine({
     accessToken,
@@ -82,9 +82,12 @@ export const localUpdater = decorate(
   })
 )
 
-export const globalDecorator = decorate(
+const globalDecorator = decorate(
   withDefaultState({}),
   updateStateAt('authentication'),
   localUpdater
 )
-export default globalDecorator
+
+exports = module.exports = globalDecorator
+exports.localUpdater = localUpdater
+exports.globalDecorator = globalDecorator

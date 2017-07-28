@@ -1,3 +1,3 @@
-export { default as actions } from './actions'
-export { default as updater } from './updater'
-export { default as epic } from './epic'
+exports.actions = require('./actions')
+exports.updater = require('./updater')
+exports.epic = require('./epic')

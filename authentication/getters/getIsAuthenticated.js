@@ -1,8 +1,8 @@
-import { createSelector } from 'reselect'
+const { createSelector } = require('reselect')
 
-import getCredentialId from './getCredentialId'
+const getCredentialId = require('./getCredentialId')
 
-export default createSelector(
+module.exports = createSelector(
   getCredentialId,
   Boolean
 )

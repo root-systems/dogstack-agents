@@ -1,8 +1,8 @@
-import { createSelector } from 'reselect'
+const { createSelector } = require('reselect')
 
-import getRawProfiles from './getRawProfiles'
+const getRawProfiles = require('./getRawProfiles')
 
-export default createSelector(
+module.exports = createSelector(
   getRawProfiles,
   (profiles) => profiles
 )

@@ -1,10 +1,10 @@
-import { pipe, prop, propOr } from 'ramda'
-import { createSelector } from 'reselect'
+const { pipe, prop, propOr } = require('ramda')
+const { createSelector } = require('reselect')
 
-import getCurrentCredentialId from '../../authentication/getters/getCredentialId'
-import getCredentials from '../../credentials/getters/getCredentials'
+const getCurrentCredentialId = require('../../authentication/getters/getCredentialId')
+const getCredentials = require('../../credentials/getters/getCredentials')
 
-export default createSelector(
+module.exports = createSelector(
   getCurrentCredentialId,
   getCredentials,
   pipe(
