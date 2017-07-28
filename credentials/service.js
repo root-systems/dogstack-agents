@@ -1,6 +1,7 @@
 const feathersKnex = require('feathers-knex')
 const { hashPassword } = require('feathers-authentication-local').hooks
 const { isProvider: isTransport, iff, discard } = require('feathers-hooks-common')
+const isNil = require('ramda/src/isNil')
 
 module.exports = function () {
   const app = this
@@ -17,8 +18,8 @@ const hooks = {
   before: {
     create: [
       hashPassword(),
-      setProfileData,
-      createAgent,
+      iff(hasNoAgent, setProfileData),
+      iff(hasNoAgent, createAgent),
       getEmailFromRemote,
       clearRemoteData
     ]
@@ -33,6 +34,10 @@ const hooks = {
       deleteIfCreateFailed
     ]
   }
+}
+
+function hasNoAgent (hook) {
+  return isNil(hook.data.agentId)
 }
 
 function getEmailFromRemote (hook) {
@@ -88,7 +93,7 @@ function setProfileData (hook) {
   }
 
   const { agentId } = hook.data
-  
+
   hook.data.profile = {
     name,
     avatar
