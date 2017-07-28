@@ -1,10 +1,10 @@
-import { prop } from 'ramda'
-import { createSelector } from 'reselect'
+const { prop } = require('ramda')
+const { createSelector } = require('reselect')
 
-import getAgents from './getAgents'
-import getCurrentAgentId from './getCurrentAgentId'
+const getAgents = require('./getAgents')
+const getCurrentAgentId = require('./getCurrentAgentId')
 
-export default createSelector(
+module.exports = createSelector(
   getCurrentAgentId,
   getAgents,
   prop

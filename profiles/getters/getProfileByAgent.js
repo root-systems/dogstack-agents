@@ -1,9 +1,9 @@
-import { createSelector } from 'reselect'
-import { pipe, values, indexBy, prop } from 'ramda'
+const { createSelector } = require('reselect')
+const { pipe, values, indexBy, prop } = require('ramda')
 
-import getProfiles from './getProfiles'
+const getProfiles = require('./getProfiles')
 
-export default createSelector(
+module.exports = createSelector(
   getProfiles,
   pipe(
     values,

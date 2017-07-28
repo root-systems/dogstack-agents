@@ -1,12 +1,12 @@
 const { combineEpics } = require('redux-observable')
 
-import { epic as agents } from './agents'
-import { epic as credentials } from './credentials'
-import { epic as profiles } from './profiles'
-import { epic as authentication } from './authentication'
-import { epic as relationships } from './relationships'
+const agents = require('./agents').epic
+const credentials = require('./credentials').epic
+const profiles = require('./profiles').epic
+const authentication = require('./authentication').epic
+const relationships = require('./relationships').epic
 
-export default combineEpics(
+module.exports = combineEpics(
   agents,
   credentials,
   profiles,

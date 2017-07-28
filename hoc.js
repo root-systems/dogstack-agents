@@ -1,2 +1,2 @@
-export { default as UserIsAuthenticated } from './authentication/hoc/userIsAuthenticated'
-export { default as UserIsNotAuthenticated } from './authentication/hoc/userIsNotAuthenticated'
+exports.UserIsAuthenticated = require('./authentication/hoc/userIsAuthenticated')
+exports.UserIsNotAuthenticated = require('./authentication/hoc/userIsNotAuthenticated')

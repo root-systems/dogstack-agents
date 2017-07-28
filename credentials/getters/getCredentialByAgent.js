@@ -1,9 +1,9 @@
-import { createSelector } from 'reselect'
-import { pipe, values, indexBy, prop } from 'ramda'
+const { createSelector } = require('reselect')
+const { pipe, values, indexBy, prop } = require('ramda')
 
-import getCredentials from './getCredentials'
+const getCredentials = require('./getCredentials')
 
-export default createSelector(
+module.exports = createSelector(
   getCredentials,
   pipe(
     values,
