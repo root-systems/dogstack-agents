@@ -1,6 +1,6 @@
 {
   "name": "dogstack-agents",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "dogstack plugin to provide core user authentication, profiles, and relationships",
   "main": "index.js",
   "browser": "browser.js",
