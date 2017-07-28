@@ -1,6 +1,6 @@
 const createModule = require('feathers-action')
 
-const dux = createModule('profiles')
+const dux = createModule('relationships')
 
 export default dux
 export const actions = dux.actions
