@@ -19,7 +19,7 @@ const hooks = {
     create: [
       getProfileData,
       getCredentialData,
-      getRelationshipData,
+      getRelationshipsData,
       getContextAgentData
     ]
   },
@@ -27,35 +27,35 @@ const hooks = {
     create: [
       createProfile,
       iff(isPersonAgent, createCredential),
-      iff(isPersonAgent, createRelationship)
+      iff(isPersonAgent, createRelationships)
     ]
   },
   error: {}
 }
 
 function getProfileData (hook) {
-  if (isNil(hook.params.profile)) return hook
+  if (isNil(hook.data.profile)) return hook
   hook.params.profile = hook.data.profile
   delete hook.data.profile
   return hook
 }
 
 function getCredentialData (hook) {
-  if (isNil(hook.params.credential)) return hook
+  if (isNil(hook.data.credential)) return hook
   hook.params.credential = hook.data.credential
   delete hook.data.credential
   return hook
 }
 
-function getRelationshipData (hook) {
-  if (isNil(hook.params.relationship)) return hook
-  hook.params.relationship = hook.data.relationship
-  delete hook.data.relationship
+function getRelationshipsData (hook) {
+  if (isNil(hook.data.relationships)) return hook
+  hook.params.relationships = hook.data.relationships
+  delete hook.data.relationships
   return hook
 }
 
 function getContextAgentData (hook) {
-  if (isNil(hook.params.contextAgent)) return hook
+  if (isNil(hook.data.contextAgent)) return hook
   hook.params.contextAgent = hook.data.contextAgent
   delete hook.data.contextAgent
   return hook
@@ -87,17 +87,18 @@ function createCredential (hook) {
   .then(() => hook)
 }
 
-function createRelationship (hook) {
+function createRelationships (hook) {
   const agent = hook.result
-  const relationships = hook.app.service('relationships')
-  var { relationship = {}, contextAgent = {} } = hook.params
+  const relationshipsService = hook.app.service('relationships')
+  var { relationships = [], contextAgent = {} } = hook.params
 
-  relationship = merge(relationship, {
-    sourceId: contextAgent.id,
-    targetId: agent.id
-  })
-
-  return relationships.create(relationship)
+  return Promise.all(relationships.map((relationship) => {
+    const relationshipData = merge(relationship, {
+      sourceId: contextAgent.id,
+      targetId: agent.id
+    })
+    return relationshipsService.create(relationshipData)
+  }))
   .then(() => hook)
 }
 
