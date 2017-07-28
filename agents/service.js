@@ -34,24 +34,28 @@ const hooks = {
 }
 
 function getProfileData (hook) {
+  if (isNil(hook.params.profile)) return hook
   hook.params.profile = hook.data.profile
   delete hook.data.profile
   return hook
 }
 
 function getCredentialData (hook) {
+  if (isNil(hook.params.credential)) return hook
   hook.params.credential = hook.data.credential
   delete hook.data.credential
   return hook
 }
 
 function getRelationshipData (hook) {
+  if (isNil(hook.params.relationship)) return hook
   hook.params.relationship = hook.data.relationship
   delete hook.data.relationship
   return hook
 }
 
 function getContextAgentData (hook) {
+  if (isNil(hook.params.contextAgent)) return hook
   hook.params.contextAgent = hook.data.contextAgent
   delete hook.data.contextAgent
   return hook
