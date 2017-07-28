@@ -4,7 +4,7 @@ const { createSelector } = require('reselect')
 const getCredentialByAgent = require('../../credentials/getters/getCredentialByAgent')
 const getProfileByAgent = require('../../profiles/getters/getProfileByAgent')
 const getRawAgents = require('./getRawAgents')
-const getRelationshipsBySource = require('../../relationships/getRelationshipsBySource')
+const getRelationshipsBySource = require('../../relationships/getters/getRelationshipsBySource')
 
 module.exports = createSelector(
   getCredentialByAgent,
