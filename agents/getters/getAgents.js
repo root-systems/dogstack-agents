@@ -4,15 +4,18 @@ const { createSelector } = require('reselect')
 const getCredentialByAgent = require('../../credentials/getters/getCredentialByAgent')
 const getProfileByAgent = require('../../profiles/getters/getProfileByAgent')
 const getRawAgents = require('./getRawAgents')
+const getRelationshipsBySource = require('../../relationships/getRelationshipsBySource')
 
 module.exports = createSelector(
   getCredentialByAgent,
   getProfileByAgent,
+  getRelationshipsBySource,
   getRawAgents,
-  uncurryN(3, (credentialByAgent, profileByAgent) => map(agent => {
+  uncurryN(4, (credentialByAgent, profileByAgent, relationshipsBySource) => map(agent => {
     return merge(agent, {
       credential: credentialByAgent[agent.id],
-      profile: profileByAgent[agent.id]
+      profile: profileByAgent[agent.id],
+      sourceRelationships: relationshipsBySource[agent.id]
     })
   }))
 )
