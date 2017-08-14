@@ -1,4 +1,4 @@
-const { pipe, toPairs, map, reduce, keys, assoc } = require('ramda')
+const { pipe, toPairs, map, reduce, keys, invertObj } = require('ramda')
 const { createSelector } = require('reselect')
 
 const getRelationshipsBySourceTargetType = require('../../relationships/getters/getRelationshipsBySourceTargetType')
@@ -13,7 +13,7 @@ module.exports = createSelector(
       // - handle duplicate relationships of same type (how?)
       reduce((sofar, [targetId, relationshipsByType]) => {
         const agentId = targetId
-        const roles = keys(relationshipsByType)
+        const roles = map(() => true, relationshipsByType)
         const member = { agentId, roles }
         return [...sofar, member]
       }, [])
