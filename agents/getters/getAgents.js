@@ -4,36 +4,33 @@ const { createSelector } = require('reselect')
 const getCredentialByAgent = require('../../credentials/getters/getCredentialByAgent')
 const getProfileByAgent = require('../../profiles/getters/getProfileByAgent')
 const getRawAgents = require('./getRawAgents')
-const getRelationshipsBySource = require('../../relationships/getters/getRelationshipsBySource')
+const getMembersByGroup = require('./getMembersByGroup')
 
 const propOrEmptyArray = propOr([])
 
 module.exports = createSelector(
   getCredentialByAgent,
   getProfileByAgent,
-  getRelationshipsBySource,
+  getMembersByGroup,
   getRawAgents,
-  (credentialByAgent, profileByAgent, relationshipsBySource, rawAgents) => {
-    const mapRelationships = map(relationship => {
-      const { sourceId, targetId } = relationship
-      return merge(relationship, {
-        source: merge(rawAgents[sourceId], {
-          credential: credentialByAgent[sourceId],
-          profile: profileByAgent[sourceId]
-        }),
-        target: merge(rawAgents[targetId], {
-          credential: credentialByAgent[targetId],
-          profile: profileByAgent[targetId]
+  (credentialByAgent, profileByAgent, membersByGroup, rawAgents) => {
+    const mapMembers = map(member => {
+      const { agentId } = member
+      return merge(member, {
+        agent: merge(rawAgents[agentId], {
+          id: agentId,
+          credential: credentialByAgent[agentId],
+          profile: profileByAgent[agentId]
         })
       })
     })
 
     const mapAgents = map(agent => {
-      const sourceRelationships = propOrEmptyArray(agent.id, relationshipsBySource)
+      const members = propOrEmptyArray(agent.id, membersByGroup)
       return merge(agent, {
         credential: credentialByAgent[agent.id],
         profile: profileByAgent[agent.id],
-        sourceRelationships: mapRelationships(sourceRelationships)
+        members: mapMembers(members)
       })
     })
 
