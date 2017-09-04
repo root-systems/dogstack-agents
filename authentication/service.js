@@ -5,6 +5,7 @@ const { authenticate } = authentication.hooks
 const local = require('feathers-authentication-local')
 const jwt = require('feathers-authentication-jwt')
 const oauth2 = require('feathers-authentication-oauth2')
+const addCurrentAgent = require('../agents/hooks/addCurrentAgent')
 
 const remotePlugins = { oauth2 }
 
@@ -19,9 +20,9 @@ module.exports = function () {
   assert(config, 'must set `authentication` in config.')
 
   app
-  .configure(authentication(config))
-  .configure(jwt())
-  .configure(local(config.local))
+    .configure(authentication(config))
+    .configure(jwt())
+    .configure(local(config.local))
 
   keys(config.remote).forEach(name => {
     const provider = config.remote[name]
@@ -35,11 +36,16 @@ module.exports = function () {
       create: [
         authenticate(config.strategies)
       ]
+    },
+    after: {
+      all: [
+        addCurrentAgent
+      ]
     }
   })
 }
 
-function remoteFormatter (req, res, next) {
+function remoteFormatter(req, res, next) {
   const token = res.data
   var template = `
     <html>
