@@ -29,7 +29,7 @@ after uninstall, this module should unlink these linked migrations.
 
 ## usage
 
-### `{ config, service, actions, updater, epic, ...getters, ...components, ...hoc } = require('dogstack-agents')`
+### `{ config, service, actions, updater, epic, ...getters, ...components, ...hoc, ...hooks } = require('dogstack-agents')`
 
 ### `config`
 
@@ -121,6 +121,15 @@ exports the following higher-order components:
 
 - [`UserIsAuthenticated`](./authentication/hoc/userIsAuthenticated)
 - [`UserIsNotAuthenticated`](./authentication/hoc/userIsNotAuthenticated)
+
+### `hooks`
+
+[`feathers`](http://feathersjs.com) service [hooks](https://docs.feathersjs.com/api/hooks.html)
+
+exports the following hooks
+
+- [`addCurrentAgent`](./agents/hooks/addCurrentAgent.js)
+- [`addCurrentProfile`](./profiles/hooks/addCurrentProfile.js)
 
 ## license
 
