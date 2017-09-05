@@ -9,11 +9,10 @@ function addCurrentAgent(hook) {
 
   return agents.get(hook.params.credential.agentId)
     .then((agent) => {
-      return merge(hook, {
-        params: merge(hook.params, {
-          agent: agent
-        })
+      hook.params = merge(hook.params, {
+        agent: agent
       })
+      return hook
     })
 }
 

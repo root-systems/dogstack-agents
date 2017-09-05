@@ -9,11 +9,10 @@ function addCurrentProfile(hook) {
 
   return profiles.find({ query: { agentId: hook.params.credential.agentId } })
     .then((profiles) => {
-      return merge(hook, {
-        params: merge(hook.params, {
-          profiles: profiles
-        })
+      hook.params = merge(hook.params, {
+        profiles: profiles
       })
+      return hook
     })
 }
 
