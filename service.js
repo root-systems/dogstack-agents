@@ -1,3 +1,5 @@
+import { addCurrentAgent } from './hooks'
+
 const services = [
   require('./agents/service'),
   require('./credentials/service'),
@@ -8,6 +10,15 @@ const services = [
 
 module.exports = function () {
   const app = this
+
+  services.hooks({
+    before: {
+      all: [
+        addCurrentAgent
+      ]
+    }
+  })
+
   services.forEach(service => {
     app.configure(service)
   })

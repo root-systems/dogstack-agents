@@ -5,7 +5,6 @@ const { authenticate } = authentication.hooks
 const local = require('feathers-authentication-local')
 const jwt = require('feathers-authentication-jwt')
 const oauth2 = require('feathers-authentication-oauth2')
-const addCurrentAgent = require('../agents/hooks/addCurrentAgent')
 
 const remotePlugins = { oauth2 }
 
@@ -35,11 +34,6 @@ module.exports = function () {
     before: {
       create: [
         authenticate(config.strategies)
-      ]
-    },
-    after: {
-      all: [
-        addCurrentAgent
       ]
     }
   })
