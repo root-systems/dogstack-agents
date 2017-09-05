@@ -1,8 +1,9 @@
 const merge = require('ramda/src/merge')
 const isNil = require('ramda/src/isNil')
+const path = require('ramda/src/path')
 
 function addCurrentProfile(hook) {
-  if (isNil(hook.params.credential.agentId)) return hook
+  if (isNil(path(['params', 'credential', 'agentId'], hook))) return hook
 
   const profiles = hook.app.service('profiles')
 
