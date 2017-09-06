@@ -11,7 +11,7 @@ const services = [
 module.exports = function () {
   const app = this
 
-  services.hooks({
+  app.hooks({
     before: {
       all: [
         addCurrentAgent
