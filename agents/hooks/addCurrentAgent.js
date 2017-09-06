@@ -2,7 +2,7 @@ const merge = require('ramda/src/merge')
 const isNil = require('ramda/src/isNil')
 const path = require('ramda/src/path')
 
-function addCurrentAgent(hook) {
+module.exports = function addCurrentAgent (hook) {
   if (isNil(path(['params', 'credential', 'agentId'], hook))) return hook
 
   const agents = hook.app.service('agents')
@@ -15,5 +15,3 @@ function addCurrentAgent(hook) {
       return hook
     })
 }
-
-export default addCurrentAgent
