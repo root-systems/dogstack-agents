@@ -1,4 +1,4 @@
-import { addCurrentAgent } from './hooks'
+var addCurrentAgent = require('./hooks').addCurrentAgent
 
 const services = [
   require('./agents/service'),
