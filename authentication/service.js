@@ -19,9 +19,9 @@ module.exports = function () {
   assert(config, 'must set `authentication` in config.')
 
   app
-  .configure(authentication(config))
-  .configure(jwt())
-  .configure(local(config.local))
+    .configure(authentication(config))
+    .configure(jwt())
+    .configure(local(config.local))
 
   keys(config.remote).forEach(name => {
     const provider = config.remote[name]
@@ -39,7 +39,7 @@ module.exports = function () {
   })
 }
 
-function remoteFormatter (req, res, next) {
+function remoteFormatter(req, res, next) {
   const token = res.data
   var template = `
     <html>
