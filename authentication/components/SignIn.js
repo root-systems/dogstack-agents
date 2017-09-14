@@ -118,7 +118,7 @@ const SignIn = compose(
       ),
       h(LocalAuthenticationForm, {
         styles,
-        onSubmit: actions.authentication.register,
+        signIn: actions.authentication.signIn,
         navigateToRegister
       })
     ])

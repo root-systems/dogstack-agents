@@ -12,6 +12,11 @@ const { register, signIn } = authentication
 const Register = require('../components/Register')
 
 module.exports = compose(
+  connectFeathers({
+    selector: getRegisterProps,
+    actions: { authentication: { register, signIn } },
+    query: []
+  }),
   // we want to pass router.push action down.
   // can't use connect feathers because that
   // wraps every action creator in a cid creator.
@@ -23,10 +28,5 @@ module.exports = compose(
         router: bindActionCreators({ push }, dispatch)
       })
     })
-  ),
-  connectFeathers({
-    selector: getRegisterProps,
-    actions: { authentication: { register, signIn } },
-    query: []
-  })
+  )
 )(Register)

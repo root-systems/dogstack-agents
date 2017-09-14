@@ -29,7 +29,7 @@ function RemoteAuthenticationButtons (allProps) {
 
   return (
     h('ul', {
-      className: styles.remote
+      className: styles.remotes
     }, [
       buttonItems(buttons)
     ])
