@@ -3,13 +3,11 @@ const { pipe, map, mapObjIndexed, values, mergeAll } = require('ramda')
 
 const RemoteAuthenticationButton = require('./RemoteAuthenticationButton')
 
-// TODO get this config from the redux store
-const remoteAuthenticationMethods = window.config.authentication.remote
-
 module.exports = RemoteAuthenticationButtons
 
 function RemoteAuthenticationButtons (allProps) {
-  const { styles } = allProps
+  const { styles, config } = allProps
+  const { remotes: remoteAuthenticationMethods } = config
 
   const buttons = pipe(
     mapObjIndexed((method, name) => {

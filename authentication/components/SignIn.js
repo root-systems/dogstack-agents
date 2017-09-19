@@ -10,7 +10,7 @@ const FontIcon = require('material-ui/FontIcon').default
 const { FormattedMessage } = require('dogstack/intl')
 
 const styles = require('../styles/SignIn')
-const RemoteAuthenticationMethods = require('./RemoteAuthenticationButtons')
+const RemoteAuthenticationMethods = require('../containers/RemoteAuthenticationButtons')
 
 // https://blog.codinghorror.com/the-god-login/
 
