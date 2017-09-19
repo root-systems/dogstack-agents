@@ -11,7 +11,7 @@ const { required, email, length, confirmation } = require('@root-systems/redux-f
 const { FormattedMessage } = require('dogstack/intl')
 
 const styles = require('../styles/Register')
-const RemoteAuthenticationMethods = require('./RemoteAuthenticationButtons')
+const RemoteAuthenticationMethods = require('../containers/RemoteAuthenticationButtons')
 
 // https://blog.codinghorror.com/the-god-login/
 
