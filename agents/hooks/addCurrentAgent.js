@@ -10,7 +10,7 @@ const hasAgentId = pipe(
 )
 
 module.exports = function addCurrentAgent (hook) {
-  if (hasAgentId(hook)) return hook
+  if (!hasAgentId(hook)) return hook
 
   const agents = hook.app.service('agents')
 
