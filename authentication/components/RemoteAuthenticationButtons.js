@@ -7,7 +7,7 @@ module.exports = RemoteAuthenticationButtons
 
 function RemoteAuthenticationButtons (allProps) {
   const { styles, config } = allProps
-  const { remotes: remoteAuthenticationMethods } = config
+  const { remote: remoteAuthenticationMethods } = config
 
   const buttons = pipe(
     mapObjIndexed((method, name) => {
