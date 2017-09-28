@@ -1,17 +1,17 @@
 const { pipe, toPairs, map, filter, reduce  } = require('ramda')
 const { createSelector } = require('reselect')
 
-const getRolesBySourceTarget = require('../../relationships/getters/getRolesBySourceTarget')
+const getRolesByTargetSource = require('../../relationships/getters/getRolesByTargetSource')
 
 module.exports = createSelector(
-  getRolesBySourceTarget,
+  getRolesByTargetSource,
   map(pipe(
     toPairs,
     filter(([targetId, roles]) => roles.member),
     reduce((sofar, [targetId, roles]) =>  {
       const agentId = parseInt(targetId)
-      const member = { agentId, roles }
-      return [...sofar, member]
+      const group = { agentId, roles }
+      return [...sofar, group]
     }, [])
   ))
 )
