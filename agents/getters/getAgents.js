@@ -13,6 +13,7 @@ module.exports = createSelector(
   getCredentialByAgent,
   getProfileByAgent,
   getMembersByGroup,
+  getGroupsByMember,
   getRawAgents,
   (credentialByAgent, profileByAgent, membersByGroup, groupsByMember, rawAgents) => {
     const mapAgentRelationships = map(agent => {
