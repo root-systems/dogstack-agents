@@ -1,14 +1,19 @@
 exports.up = function (knex, Promise) {
-  return Promise.all([
-    knex.schema.createTableIfNotExists('agents', function (table) {
-      table.increments('id')
-    }),
-    knex.schema.table('credentials', function (table) {
+  return knex.schema.createTableIfNotExists('agents', function (table) {
+    table.increments('id')
+  })
+  .then(() => {
+    return knex.schema.table('credentials', function (table) {
       table.integer('agentId').references('agents.id')
     })
-  ])
+  })
 }
 
 exports.down = function (knex, Promise) {
-  return knex.schema.dropTableIfExists('agents')
+  return knex.schema.table('credentials', function (table) {
+    table.dropColumn('agentId')
+  })
+  .then(() => {
+    return knex.schema.dropTableIfExists('agents')
+  })
 }
