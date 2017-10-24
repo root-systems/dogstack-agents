@@ -22,7 +22,9 @@ const hooks = {
       iff(hasNoAgent, createAgent),
       getEmailFromRemote,
       clearRemoteData
-    ]
+    ],
+    update: [ hashPassword() ],
+    patch: [ hashPassword() ]
   },
   after: {
     all: [
