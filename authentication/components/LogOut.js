@@ -7,7 +7,7 @@ const { omit, merge } = require('ramda')
 
 const styles = require('../styles/LogOut')
 
-const getMoreProps = omit(['styles', 'actions', 'as'])
+const getMoreProps = omit(['styles', 'actions', 'as', 'onClick'])
 
 const LogOut = compose(
   connectFela(styles)
@@ -16,15 +16,18 @@ const LogOut = compose(
     styles,
     actions,
     as: Component = FlatButton,
+    onClick
     // ...moreProps
   } = props
   const moreProps = getMoreProps(props)
-
   return (
     h(Component, merge(
       {
         className: styles.container,
-        onClick: actions.authentication.logOut
+        onClick: (ev) => {
+          if (onClick) onClick(ev)
+          actions.authentication.logOut()
+        }
       },
       moreProps
     ), [
