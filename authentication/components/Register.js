@@ -111,7 +111,7 @@ const LocalAuthenticationForm = compose(
 const Register = compose(
   connectFela(styles)
 )(props => {
-  const { styles, error, actions } = props
+  const { styles, appName, error, actions } = props
 
   return (
     h('div', {
@@ -122,7 +122,10 @@ const Register = compose(
       }, [
         h(FormattedMessage, {
           id: 'agents.welcome',
-          className: styles.labelText
+          className: styles.labelText,
+          values: {
+            appName
+          }
         })
       ]),
       h('ul', {
