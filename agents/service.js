@@ -73,7 +73,15 @@ function createHasOneRelated (name, serviceName, foreignKey) {
 
     data = merge(data, { [foreignKey]: id })
 
-    return service.create(data)
+    return service.find({
+      query: {
+        [foreignKey]: id
+      }
+    })
+    .then(related => {
+      if (related.length > 0) return
+      return service.create(data)
+    })
     .then(() => hook)
   }
 }
