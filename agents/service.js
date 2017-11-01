@@ -39,7 +39,11 @@ const hooks = {
   after: {
     create: [
       createHasOneRelated('profile', 'profiles', 'agentId'),
-      iff(isPersonAgent, createHasOneRelated('credential', 'credentials', 'agentId')),
+      iff(isPersonAgent,
+        iff(isNotCreatingCredential,
+          createHasOneRelated('credential', 'credentials', 'agentId')
+        )
+      ),
       iff(isPersonAgent, createRelationships)
     ],
     patch: [
@@ -54,6 +58,10 @@ const hooks = {
     ]
   },
   error: {}
+}
+
+function isNotCreatingCredential (hook) {
+  return !hook.params.isCreatingCredential
 }
 
 function getData (name) {
@@ -73,15 +81,7 @@ function createHasOneRelated (name, serviceName, foreignKey) {
 
     data = merge(data, { [foreignKey]: id })
 
-    return service.find({
-      query: {
-        [foreignKey]: id
-      }
-    })
-    .then(related => {
-      if (related.length > 0) return
-      return service.create(data)
-    })
+    return service.create(data)
     .then(() => hook)
   }
 }
