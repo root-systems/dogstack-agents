@@ -64,7 +64,11 @@ function createAgent (hook) {
   }
   delete hook.data.profile
 
-  return agents.create(data)
+  return agents.create(data, {
+    // HACK for https://github.com/root-systems/cobuy/issues/253
+    // see corresponding code in agents service
+    isCreatingCredential: true
+  })
   .then(agent => {
     hook.data.agentId = agent.id
     return hook
