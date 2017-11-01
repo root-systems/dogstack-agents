@@ -107,19 +107,29 @@ function setProfileData (hook) {
 // TODO replace this with proper database transactions
 // https://github.com/feathersjs/feathers-knex/issues/91
 function deleteIfCreateFailed (hook) {
+  const { app, data, error } = hook
   const agents = hook.app.service('agents')
-  const profiles = hook.app.service('profiles')
 
   const { agentId } = hook.data
   if (!agentId) return hook
 
   return Promise.all([
-    agents.remove({ id: agentId }),
-    profiles.find({ agentId })
-      .then((profileList) => {
-        return Promise.all(profileList.map(profile => {
-          return profiles.remove({ id: profile.id })
-        }))
-      })
-  ]).then(() => hook)
+    removeRelated({ agentId, service: app.service('profiles') }),
+    removeRelated({ agentId, service: app.service('credentials') }),
+    removeRelated({ agentId, service: app.service('tokens') }),
+    removeRelated({ agentId, service: app.service('taskPlans') })
+  ])
+  .then(() => {
+    return app.service('agents').remove(agentId)
+  })
+  .then(() => hook)
+}
+
+function removeRelated ({ service, agentId }) {
+  return service.find({ agentId })
+    .then(list => {
+      return Promise.all(list.map(item => {
+        return service.remove(item.id)
+      }))
+    })
 }
