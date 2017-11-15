@@ -15,6 +15,9 @@ module.exports = function () {
   const db = app.get('db')
 
   const name = 'agents'
+  // profile (via agentId)
+  // credential (via agentId)
+  // relationships (via sourceId, targetId)
   const options = { Model: db, name }
 
   app.use(name, feathersKnex(options))
