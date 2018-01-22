@@ -70,7 +70,7 @@ function registerEpic (action$, store, deps) {
   return action$.ofType(register.type)
     .switchMap(action => {
       const { payload } = action
-      const { email, password } = payload
+      const { email, password, name } = payload
       const { cid } = action.meta
 
       const createdSuccess$ = action$.ofType(credentials.complete.type).filter(onlyCid).take(1)
@@ -83,7 +83,7 @@ function registerEpic (action$, store, deps) {
       return Rx.Observable.merge(
         Rx.Observable.of(
           registerStart(cid),
-          credentials.create(cid, { email, password })
+          credentials.create(cid, { email, password, name })
         ),
         createdSuccess$
           .withLatestFrom(createdSet$, (success, set) => set.payload.data)

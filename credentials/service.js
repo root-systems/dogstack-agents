@@ -86,7 +86,9 @@ function clearRemoteData (hook) {
 function setProfileData (hook) {
   if (!hook.data) return hook
 
-  var name, avatar
+  var name = hook.data.name
+  var avatar
+  delete hook.data.name
 
   if (hook.params.oauth) {
     const remoteProvider = hook.params.oauth.provider
