@@ -1,6 +1,7 @@
 const feathersKnex = require('feathers-knex')
 const { iff } = require('feathers-hooks-common')
 const isNil = require('ramda/src/isNil')
+const isEmpty = require('ramda/src/isEmpty')
 const merge = require('ramda/src/merge')
 const is = require('ramda/src/is')
 const pipe = require('ramda/src/pipe')
@@ -9,6 +10,7 @@ const prop = require('ramda/src/prop')
 const bind = require('ramda/src/bind')
 
 const isArray = is(Array)
+const getAgentIds = map(prop('agentId'))
 
 module.exports = function () {
   const app = this
@@ -27,7 +29,8 @@ const hooks = {
       getData('profile'),
       getData('credential'),
       getData('relationships'),
-      getData('contextAgentId')
+      getData('contextAgentId'),
+      agentAndCredentialAlreadyExist
     ],
     patch: [
       getData('profile'),
@@ -58,6 +61,61 @@ const hooks = {
     ]
   },
   error: {}
+}
+
+function agentAndCredentialAlreadyExist (hook) {
+  // { query: {},
+  //   provider: 'socketio',
+  //   payload: { credentialId: 1 },
+  //   credential: { email: 'greg4@rootsystems.nz' },
+  //   accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJjcmVkZW50aWFsSWQiOjEsImlhdCI6MTUxNjY2Mjg4NSwiZXhwIjoxNTE2NzQ5Mjg1LCJhdWQiOiJodHRwczovL3lvdXJkb21haW4uY29tIiwiaXNzIjoiZmVhdGhlcnMiLCJzdWIiOiJhbm9ueW1vdXMiLCJqdGkiOiIyMWE3NzNjZi1jZjRhLTRmNDMtODFkNC03YjRlZTA0ZDMxNzIifQ.1UbSPxdZVfDbrgFolzIOmYN7giaPzJu0UrZ5GWwqhSU',
+  //   headers: { Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJjcmVkZW50aWFsSWQiOjEsImlhdCI6MTUxNjY2Mjg4NSwiZXhwIjoxNTE2NzQ5Mjg1LCJhdWQiOiJodHRwczovL3lvdXJkb21haW4uY29tIiwiaXNzIjoiZmVhdGhlcnMiLCJzdWIiOiJhbm9ueW1vdXMiLCJqdGkiOiIyMWE3NzNjZi1jZjRhLTRmNDMtODFkNC03YjRlZTA0ZDMxNzIifQ.1UbSPxdZVfDbrgFolzIOmYN7giaPzJu0UrZ5GWwqhSU' },
+  //   authenticated: true,
+  //   agent: anonymous { id: 1, type: 'person' },
+  //   profile: {},
+  //   relationships: [ { relationshipType: 'member' } ],
+  //   contextAgentId: 9 }
+  const relationshipsService = hook.app.service('relationships')
+  const credentialsService = hook.app.service('credentials')
+  const agentsService = hook.app.service('agents')
+  console.log(hook.params)
+  const { contextAgentId, relationships, credential } = hook.params
+  // 1. query for credential based on email
+
+  return credentialsService.find({
+    query: {
+      email: credential.email
+    }
+  })
+  .then((credentialResults) => {
+    const agentIds = getAgentIds(credentialResults)
+    console.log('credentialResults', credentialResults)
+    console.log('agentIds', agentIds)
+    console.log('credentialResults isEmpty', isEmpty(credentialResults))
+    console.log('credentialResults isNil', isNil(credentialResults))
+    return agentsService.find({
+      query: {
+        id: {
+          $in: agentIds
+        }
+      }
+    })
+    .then((agentResults) => {
+      console.log('agentResults', agentResults)
+      if (isEmpty(agentResults)) {
+        console.log('new agent, continuing as per')
+        return hook
+      } else {
+        console.log('existing agent, skipping service method call')
+        hook.result = agentResults[0]
+        return hook
+      }
+    })
+  })
+  // 2. query for agent based on credential
+  // 3. if both exist, create appropriate relationships based on relationships array
+  // where sourceId: contextAgentId, and targetId is existing individual agent
+  // 4. and return hook.result with agent object?
 }
 
 function isNotCreatingCredential (hook) {
@@ -145,6 +203,7 @@ function patchRelationships (hook) {
 }
 
 function isPersonAgent (hook) {
+  console.log('isPersonAgent hook')
   return hook.result.type === 'person'
 }
 
