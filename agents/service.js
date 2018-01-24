@@ -47,7 +47,7 @@ const hooks = {
           iff(isNotCreatingCredential,
             createHasOneRelated('credential', 'credentials', 'agentId')
           )
-        ),
+        )
       ),
       iff(isPersonAgent, createRelationships)
     ],
