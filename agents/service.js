@@ -41,11 +41,13 @@ const hooks = {
   },
   after: {
     create: [
-      createHasOneRelated('profile', 'profiles', 'agentId'),
-      iff(isPersonAgent,
-        iff(isNotCreatingCredential,
-          createHasOneRelated('credential', 'credentials', 'agentId')
-        )
+      iff(isCreatingCredentialAndProfile, createHasOneRelated('profile', 'profiles', 'agentId')),
+      iff(isCreatingCredentialAndProfile,
+        iff(isPersonAgent,
+          iff(isNotCreatingCredential,
+            createHasOneRelated('credential', 'credentials', 'agentId')
+          )
+        ),
       ),
       iff(isPersonAgent, createRelationships)
     ],
@@ -75,11 +77,15 @@ function agentAndCredentialAlreadyExist (hook) {
   //   profile: {},
   //   relationships: [ { relationshipType: 'member' } ],
   //   contextAgentId: 9 }
+  console.log('hook data', hook.data)
+  if (hook.data.type === 'group') return hook
   const relationshipsService = hook.app.service('relationships')
   const credentialsService = hook.app.service('credentials')
   const agentsService = hook.app.service('agents')
-  console.log(hook.params)
+  console.log('hook params', hook.params)
   const { contextAgentId, relationships, credential } = hook.params
+
+  if (isNil(credential)) return hook
   // 1. query for credential based on email
 
   return credentialsService.find({
@@ -89,10 +95,10 @@ function agentAndCredentialAlreadyExist (hook) {
   })
   .then((credentialResults) => {
     const agentIds = getAgentIds(credentialResults)
-    console.log('credentialResults', credentialResults)
-    console.log('agentIds', agentIds)
-    console.log('credentialResults isEmpty', isEmpty(credentialResults))
-    console.log('credentialResults isNil', isNil(credentialResults))
+    // console.log('credentialResults', credentialResults)
+    // console.log('agentIds', agentIds)
+    // console.log('credentialResults isEmpty', isEmpty(credentialResults))
+    // console.log('credentialResults isNil', isNil(credentialResults))
     return agentsService.find({
       query: {
         id: {
@@ -101,13 +107,15 @@ function agentAndCredentialAlreadyExist (hook) {
       }
     })
     .then((agentResults) => {
-      console.log('agentResults', agentResults)
+      // console.log('agentResults', agentResults)
       if (isEmpty(agentResults)) {
         console.log('new agent, continuing as per')
         return hook
       } else {
         console.log('existing agent, skipping service method call')
         hook.result = agentResults[0]
+        console.log('hook result', hook.result)
+        hook.params.isSkippingCredentialAndProfileCreation = true
         return hook
       }
     })
@@ -116,6 +124,10 @@ function agentAndCredentialAlreadyExist (hook) {
   // 3. if both exist, create appropriate relationships based on relationships array
   // where sourceId: contextAgentId, and targetId is existing individual agent
   // 4. and return hook.result with agent object?
+}
+
+function isCreatingCredentialAndProfile (hook) {
+  return !hook.params.isSkippingCredentialAndProfileCreation
 }
 
 function isNotCreatingCredential (hook) {
