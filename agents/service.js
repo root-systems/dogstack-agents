@@ -66,27 +66,12 @@ const hooks = {
 }
 
 function agentAndCredentialAlreadyExist (hook) {
-  // { query: {},
-  //   provider: 'socketio',
-  //   payload: { credentialId: 1 },
-  //   credential: { email: 'greg4@rootsystems.nz' },
-  //   accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJjcmVkZW50aWFsSWQiOjEsImlhdCI6MTUxNjY2Mjg4NSwiZXhwIjoxNTE2NzQ5Mjg1LCJhdWQiOiJodHRwczovL3lvdXJkb21haW4uY29tIiwiaXNzIjoiZmVhdGhlcnMiLCJzdWIiOiJhbm9ueW1vdXMiLCJqdGkiOiIyMWE3NzNjZi1jZjRhLTRmNDMtODFkNC03YjRlZTA0ZDMxNzIifQ.1UbSPxdZVfDbrgFolzIOmYN7giaPzJu0UrZ5GWwqhSU',
-  //   headers: { Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJjcmVkZW50aWFsSWQiOjEsImlhdCI6MTUxNjY2Mjg4NSwiZXhwIjoxNTE2NzQ5Mjg1LCJhdWQiOiJodHRwczovL3lvdXJkb21haW4uY29tIiwiaXNzIjoiZmVhdGhlcnMiLCJzdWIiOiJhbm9ueW1vdXMiLCJqdGkiOiIyMWE3NzNjZi1jZjRhLTRmNDMtODFkNC03YjRlZTA0ZDMxNzIifQ.1UbSPxdZVfDbrgFolzIOmYN7giaPzJu0UrZ5GWwqhSU' },
-  //   authenticated: true,
-  //   agent: anonymous { id: 1, type: 'person' },
-  //   profile: {},
-  //   relationships: [ { relationshipType: 'member' } ],
-  //   contextAgentId: 9 }
-  console.log('hook data', hook.data)
   if (hook.data.type === 'group') return hook
-  const relationshipsService = hook.app.service('relationships')
   const credentialsService = hook.app.service('credentials')
   const agentsService = hook.app.service('agents')
-  console.log('hook params', hook.params)
   const { contextAgentId, relationships, credential } = hook.params
 
   if (isNil(credential)) return hook
-  // 1. query for credential based on email
 
   return credentialsService.find({
     query: {
@@ -95,10 +80,6 @@ function agentAndCredentialAlreadyExist (hook) {
   })
   .then((credentialResults) => {
     const agentIds = getAgentIds(credentialResults)
-    // console.log('credentialResults', credentialResults)
-    // console.log('agentIds', agentIds)
-    // console.log('credentialResults isEmpty', isEmpty(credentialResults))
-    // console.log('credentialResults isNil', isNil(credentialResults))
     return agentsService.find({
       query: {
         id: {
@@ -107,23 +88,15 @@ function agentAndCredentialAlreadyExist (hook) {
       }
     })
     .then((agentResults) => {
-      // console.log('agentResults', agentResults)
       if (isEmpty(agentResults)) {
-        console.log('new agent, continuing as per')
         return hook
       } else {
-        console.log('existing agent, skipping service method call')
         hook.result = agentResults[0]
-        console.log('hook result', hook.result)
         hook.params.isSkippingCredentialAndProfileCreation = true
         return hook
       }
     })
   })
-  // 2. query for agent based on credential
-  // 3. if both exist, create appropriate relationships based on relationships array
-  // where sourceId: contextAgentId, and targetId is existing individual agent
-  // 4. and return hook.result with agent object?
 }
 
 function isCreatingCredentialAndProfile (hook) {
@@ -215,7 +188,6 @@ function patchRelationships (hook) {
 }
 
 function isPersonAgent (hook) {
-  console.log('isPersonAgent hook')
   return hook.result.type === 'person'
 }
 
