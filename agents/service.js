@@ -1,6 +1,7 @@
 const feathersKnex = require('feathers-knex')
 const { iff } = require('feathers-hooks-common')
 const isNil = require('ramda/src/isNil')
+const isEmpty = require('ramda/src/isEmpty')
 const merge = require('ramda/src/merge')
 const is = require('ramda/src/is')
 const pipe = require('ramda/src/pipe')
@@ -9,6 +10,7 @@ const prop = require('ramda/src/prop')
 const bind = require('ramda/src/bind')
 
 const isArray = is(Array)
+const getAgentIds = map(prop('agentId'))
 
 module.exports = function () {
   const app = this
@@ -27,7 +29,8 @@ const hooks = {
       getData('profile'),
       getData('credential'),
       getData('relationships'),
-      getData('contextAgentId')
+      getData('contextAgentId'),
+      agentAndCredentialAlreadyExist
     ],
     patch: [
       getData('profile'),
@@ -38,10 +41,12 @@ const hooks = {
   },
   after: {
     create: [
-      createHasOneRelated('profile', 'profiles', 'agentId'),
-      iff(isPersonAgent,
-        iff(isNotCreatingCredential,
-          createHasOneRelated('credential', 'credentials', 'agentId')
+      iff(isCreatingCredentialAndProfile, createHasOneRelated('profile', 'profiles', 'agentId')),
+      iff(isCreatingCredentialAndProfile,
+        iff(isPersonAgent,
+          iff(isNotCreatingCredential,
+            createHasOneRelated('credential', 'credentials', 'agentId')
+          )
         )
       ),
       iff(isPersonAgent, createRelationships)
@@ -58,6 +63,44 @@ const hooks = {
     ]
   },
   error: {}
+}
+
+function agentAndCredentialAlreadyExist (hook) {
+  if (hook.data.type === 'group') return hook
+  const credentialsService = hook.app.service('credentials')
+  const agentsService = hook.app.service('agents')
+  const { contextAgentId, relationships, credential } = hook.params
+
+  if (isNil(credential)) return hook
+
+  return credentialsService.find({
+    query: {
+      email: credential.email
+    }
+  })
+  .then((credentialResults) => {
+    const agentIds = getAgentIds(credentialResults)
+    return agentsService.find({
+      query: {
+        id: {
+          $in: agentIds
+        }
+      }
+    })
+    .then((agentResults) => {
+      if (isEmpty(agentResults)) {
+        return hook
+      } else {
+        hook.result = agentResults[0]
+        hook.params.isSkippingCredentialAndProfileCreation = true
+        return hook
+      }
+    })
+  })
+}
+
+function isCreatingCredentialAndProfile (hook) {
+  return !hook.params.isSkippingCredentialAndProfileCreation
 }
 
 function isNotCreatingCredential (hook) {
