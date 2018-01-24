@@ -87,6 +87,7 @@ function setProfileData (hook) {
   if (!hook.data) return hook
 
   var name = hook.data.name
+  var email = hook.data.email
   var avatar
   delete hook.data.name
 
@@ -104,6 +105,7 @@ function setProfileData (hook) {
 
   hook.data.profile = {
     name,
+    email
     avatar
   }
 
