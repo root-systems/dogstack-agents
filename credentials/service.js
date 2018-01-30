@@ -105,7 +105,7 @@ function setProfileData (hook) {
 
   hook.data.profile = {
     name,
-    email
+    email,
     avatar
   }
 
