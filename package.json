@@ -47,7 +47,7 @@
     "dogstack": "^0.7.0",
     "es2040": "^1.2.6",
     "feathers-action": "^2.4.0",
-    "feathers-action-react": "^2.2.1",
+    "feathers-action-react": "^3.0.0-pre.0",
     "feathers-authentication": "^1.2.6",
     "feathers-authentication-client": "^0.3.2",
     "feathers-authentication-jwt": "^0.3.1",
