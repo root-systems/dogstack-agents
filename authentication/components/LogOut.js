@@ -1,5 +1,5 @@
 const h = require('react-hyperscript')
-const FlatButton = require('material-ui/FlatButton').default
+const Button = require('@material-ui/core/Button').default
 const { connect: connectFela } = require('react-fela')
 const compose = require('recompose/compose').default
 const { FormattedMessage } = require('dogstack/intl')
@@ -15,7 +15,7 @@ const LogOut = compose(
   const {
     styles,
     actions,
-    as: Component = FlatButton,
+    as: Component = Button,
     onClick
     // ...moreProps
   } = props

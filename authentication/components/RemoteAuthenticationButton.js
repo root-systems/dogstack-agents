@@ -1,6 +1,6 @@
 const h = require('react-hyperscript')
-const RaisedButton = require('material-ui/RaisedButton').default
-const FontIcon = require('material-ui/FontIcon').default
+const Button = require('@material-ui/core/Button').default
+const Icon = require('@material-ui/core/Icon').default
 
 module.exports = RemoteAuthenticationButton
 
@@ -14,9 +14,9 @@ function RemoteAuthenticationButton (props) {
   } = props
 
   return (
-    h(RaisedButton, {
+    h(Button, {
       label,
-      icon: h(FontIcon, { className: icon }),
+      icon: h(Icon, { className: icon }),
       backgroundColor,
       fullWidth: true,
       onClick: handleClick

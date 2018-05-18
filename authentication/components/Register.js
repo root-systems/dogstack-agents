@@ -4,9 +4,7 @@ const { Field, reduxForm: connectForm } = require('redux-form')
 const { mapObjIndexed } = require('ramda')
 const compose = require('recompose/compose').default
 const { TextField } = require('redux-form-material-ui')
-const FlatButton = require('material-ui/FlatButton').default
-const RaisedButton = require('material-ui/RaisedButton').default
-const FontIcon = require('material-ui/FontIcon').default
+const Button = require('@material-ui/core/Button').default
 const { required, email, length, confirmation } = require('@root-systems/redux-form-validators')
 const { FormattedMessage } = require('dogstack/intl')
 
@@ -81,7 +79,7 @@ const LocalAuthenticationForm = compose(
       h('div', {
         className: styles.actions
       }, [
-        h(RaisedButton, {
+        h(Button, {
           type: 'submit',
           label: (
             h(FormattedMessage, {
@@ -89,10 +87,10 @@ const LocalAuthenticationForm = compose(
               className: styles.labelText
             })
           ),
-          primary: true,
+          color: 'primary',
           className: styles.registerAction
         }),
-        h(FlatButton, {
+        h(Button, {
           type: 'submit',
           label: (
             h(FormattedMessage, {
