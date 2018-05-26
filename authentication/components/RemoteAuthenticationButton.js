@@ -17,7 +17,7 @@ function RemoteAuthenticationButton (props) {
     h(Button, {
       label,
       icon: h(Icon, { className: icon }),
-      backgroundColor,
+      // backgroundColor,
       fullWidth: true,
       onClick: handleClick
     })

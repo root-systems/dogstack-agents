@@ -70,7 +70,7 @@
     "redux": "^3.6.0",
     "redux-auth-wrapper": "^2.0.1",
     "redux-form": "^7.0.4",
-    "redux-form-material-ui": "^5.0.0-beta.2",
+    "redux-form-material-ui": "^5.0.0-beta.3",
     "redux-fp": "^0.2.0",
     "redux-observable": "^0.14.1",
     "reselect": "^3.0.1",

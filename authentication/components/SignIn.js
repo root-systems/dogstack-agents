@@ -27,24 +27,24 @@ const LocalAuthenticationForm = compose(
       h(Field, {
         name: 'email',
         type: 'email',
-        floatingLabelText: (
-          h(FormattedMessage, {
-            id: 'agents.email',
-            className: styles.labelText
-          })
-        ),
+        // floatingLabelText: (
+        //   h(FormattedMessage, {
+        //     id: 'agents.email',
+        //     className: styles.labelText
+        //   })
+        // ),
         fullWidth: true,
         component: TextField
       }),
       h(Field, {
         name: 'password',
         type: 'password',
-        floatingLabelText: (
-          h(FormattedMessage, {
-            id: 'agents.password',
-            className: styles.labelText
-          })
-        ),
+        // floatingLabelText: (
+        //   h(FormattedMessage, {
+        //     id: 'agents.password',
+        //     className: styles.labelText
+        //   })
+        // ),
         fullWidth: true,
         component: TextField
       }),

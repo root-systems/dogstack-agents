@@ -27,12 +27,12 @@ const LocalAuthenticationForm = compose(
     }, [
       h(Field, {
         name: 'name',
-        floatingLabelText: (
-          h(FormattedMessage, {
-            id: 'agents.nameLabel',
-            className: styles.labelText
-          })
-        ),
+        // floatingLabelText: (
+        //   h(FormattedMessage, {
+        //     id: 'agents.nameLabel',
+        //     className: styles.labelText
+        //   })
+        // ),
         fullWidth: true,
         component: TextField,
         validate: required()
@@ -40,12 +40,12 @@ const LocalAuthenticationForm = compose(
       h(Field, {
         name: 'email',
         type: 'email',
-        floatingLabelText: (
-          h(FormattedMessage, {
-            id: 'agents.email',
-            className: styles.labelText
-          })
-        ),
+        // floatingLabelText: (
+        //   h(FormattedMessage, {
+        //     id: 'agents.email',
+        //     className: styles.labelText
+        //   })
+        // ),
         fullWidth: true,
         component: TextField,
         validate: email()
@@ -53,12 +53,12 @@ const LocalAuthenticationForm = compose(
       h(Field, {
         name: 'password',
         type: 'password',
-        floatingLabelText: (
-          h(FormattedMessage, {
-            id: 'agents.password',
-            className: styles.labelText
-          })
-        ),
+        // floatingLabelText: (
+        //   h(FormattedMessage, {
+        //     id: 'agents.password',
+        //     className: styles.labelText
+        //   })
+        // ),
         fullWidth: true,
         component: TextField,
         validate: length({ min: 8 })
@@ -66,12 +66,12 @@ const LocalAuthenticationForm = compose(
       h(Field, {
         name: 'passwordConfirm',
         type: 'password',
-        floatingLabelText: (
-          h(FormattedMessage, {
-            id: 'agents.confirmPassword',
-            className: styles.labelText
-          })
-        ),
+        // floatingLabelText: (
+        //   h(FormattedMessage, {
+        //     id: 'agents.confirmPassword',
+        //     className: styles.labelText
+        //   })
+        // ),
         fullWidth: true,
         component: TextField,
         validate: confirmation({ field: 'password', fieldLabel: 'Password' })
