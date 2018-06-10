@@ -27,12 +27,12 @@ const LocalAuthenticationForm = compose(
     }, [
       h(Field, {
         name: 'name',
-        // floatingLabelText: (
-        //   h(FormattedMessage, {
-        //     id: 'agents.nameLabel',
-        //     className: styles.labelText
-        //   })
-        // ),
+        label: (
+          h(FormattedMessage, {
+            id: 'agents.nameLabel',
+            className: styles.labelText
+          })
+        ),
         fullWidth: true,
         component: TextField,
         validate: required()
@@ -40,12 +40,12 @@ const LocalAuthenticationForm = compose(
       h(Field, {
         name: 'email',
         type: 'email',
-        // floatingLabelText: (
-        //   h(FormattedMessage, {
-        //     id: 'agents.email',
-        //     className: styles.labelText
-        //   })
-        // ),
+        label: (
+          h(FormattedMessage, {
+            id: 'agents.email',
+            className: styles.labelText
+          })
+        ),
         fullWidth: true,
         component: TextField,
         validate: email()
@@ -53,12 +53,12 @@ const LocalAuthenticationForm = compose(
       h(Field, {
         name: 'password',
         type: 'password',
-        // floatingLabelText: (
-        //   h(FormattedMessage, {
-        //     id: 'agents.password',
-        //     className: styles.labelText
-        //   })
-        // ),
+        label: (
+          h(FormattedMessage, {
+            id: 'agents.password',
+            className: styles.labelText
+          })
+        ),
         fullWidth: true,
         component: TextField,
         validate: length({ min: 8 })
@@ -66,12 +66,12 @@ const LocalAuthenticationForm = compose(
       h(Field, {
         name: 'passwordConfirm',
         type: 'password',
-        // floatingLabelText: (
-        //   h(FormattedMessage, {
-        //     id: 'agents.confirmPassword',
-        //     className: styles.labelText
-        //   })
-        // ),
+        label: (
+          h(FormattedMessage, {
+            id: 'agents.confirmPassword',
+            className: styles.labelText
+          })
+        ),
         fullWidth: true,
         component: TextField,
         validate: confirmation({ field: 'password', fieldLabel: 'Password' })
@@ -81,26 +81,27 @@ const LocalAuthenticationForm = compose(
       }, [
         h(Button, {
           type: 'submit',
-          label: (
-            h(FormattedMessage, {
-              id: 'agents.createAccount',
-              className: styles.labelText
-            })
-          ),
+          variant: 'raised',
           color: 'primary',
           className: styles.registerAction
-        }),
+        }, [
+          h(FormattedMessage, {
+            id: 'agents.createAccount',
+            className: styles.labelText
+          })
+        ]),
         h(Button, {
           type: 'submit',
-          label: (
-            h(FormattedMessage, {
-              id: 'agents.signIn',
-              className: styles.labelText
-            })
-          ),
+          variant: 'raised',
+          color: 'secondary',
           className: styles.signInAction,
           onClick: navigateToSignIn
-        }),
+        }, [
+          h(FormattedMessage, {
+            id: 'agents.signIn',
+            className: styles.labelText
+          })
+        ]),
       ])
     ])
   )

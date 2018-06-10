@@ -27,24 +27,24 @@ const LocalAuthenticationForm = compose(
       h(Field, {
         name: 'email',
         type: 'email',
-        // floatingLabelText: (
-        //   h(FormattedMessage, {
-        //     id: 'agents.email',
-        //     className: styles.labelText
-        //   })
-        // ),
+        label: (
+          h(FormattedMessage, {
+            id: 'agents.email',
+            className: styles.labelText
+          })
+        ),
         fullWidth: true,
         component: TextField
       }),
       h(Field, {
         name: 'password',
         type: 'password',
-        // floatingLabelText: (
-        //   h(FormattedMessage, {
-        //     id: 'agents.password',
-        //     className: styles.labelText
-        //   })
-        // ),
+        label: (
+          h(FormattedMessage, {
+            id: 'agents.password',
+            className: styles.labelText
+          })
+        ),
         fullWidth: true,
         component: TextField
       }),
@@ -53,26 +53,27 @@ const LocalAuthenticationForm = compose(
       }, [
         h(Button, {
           type: 'submit',
-          label: (
-            h(FormattedMessage, {
-              id: 'agents.signIn',
-              className: styles.labelText
-            })
-          ),
+          variant: 'raised',
           color: 'primary',
           className: styles.signInAction
-        }),
+        }, [
+          h(FormattedMessage, {
+            id: 'agents.signIn',
+            className: styles.labelText
+          })
+        ]),
         h(Button, {
           type: 'submit',
-          label: (
-            h(FormattedMessage, {
-              id: 'agents.createAccount',
-              className: styles.labelText
-            })
-          ),
+          variant: 'raised',
+          color: 'secondary',
           className: styles.registerAction,
           onClick: navigateToRegister
-        }),
+        }, [
+          h(FormattedMessage, {
+            id: 'agents.createAccount',
+            className: styles.labelText
+          })
+        ]),
       ])
     ])
   )
