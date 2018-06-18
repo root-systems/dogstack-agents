@@ -45,7 +45,7 @@
     "@f/create-action": "^1.1.1",
     "@material-ui/core": "^1.0.0",
     "@root-systems/redux-form-validators": "^1.1.0",
-    "dogstack": "^0.7.0",
+    "dogstack": "root-systems/dogstack#restack",
     "es2040": "^1.2.6",
     "feathers-action": "^2.4.0",
     "feathers-action-react": "^2.2.1",
