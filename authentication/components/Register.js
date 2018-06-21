@@ -4,9 +4,7 @@ const { Field, reduxForm: connectForm } = require('redux-form')
 const { mapObjIndexed } = require('ramda')
 const compose = require('recompose/compose').default
 const { TextField } = require('redux-form-material-ui')
-const FlatButton = require('material-ui/FlatButton').default
-const RaisedButton = require('material-ui/RaisedButton').default
-const FontIcon = require('material-ui/FontIcon').default
+const Button = require('@material-ui/core/Button').default
 const { required, email, length, confirmation } = require('@root-systems/redux-form-validators')
 const { FormattedMessage } = require('dogstack/intl')
 
@@ -29,7 +27,7 @@ const LocalAuthenticationForm = compose(
     }, [
       h(Field, {
         name: 'name',
-        floatingLabelText: (
+        label: (
           h(FormattedMessage, {
             id: 'agents.nameLabel',
             className: styles.labelText
@@ -42,7 +40,7 @@ const LocalAuthenticationForm = compose(
       h(Field, {
         name: 'email',
         type: 'email',
-        floatingLabelText: (
+        label: (
           h(FormattedMessage, {
             id: 'agents.email',
             className: styles.labelText
@@ -55,7 +53,7 @@ const LocalAuthenticationForm = compose(
       h(Field, {
         name: 'password',
         type: 'password',
-        floatingLabelText: (
+        label: (
           h(FormattedMessage, {
             id: 'agents.password',
             className: styles.labelText
@@ -68,7 +66,7 @@ const LocalAuthenticationForm = compose(
       h(Field, {
         name: 'passwordConfirm',
         type: 'password',
-        floatingLabelText: (
+        label: (
           h(FormattedMessage, {
             id: 'agents.confirmPassword',
             className: styles.labelText
@@ -81,28 +79,29 @@ const LocalAuthenticationForm = compose(
       h('div', {
         className: styles.actions
       }, [
-        h(RaisedButton, {
+        h(Button, {
           type: 'submit',
-          label: (
-            h(FormattedMessage, {
-              id: 'agents.createAccount',
-              className: styles.labelText
-            })
-          ),
-          primary: true,
+          variant: 'raised',
+          color: 'primary',
           className: styles.registerAction
-        }),
-        h(FlatButton, {
+        }, [
+          h(FormattedMessage, {
+            id: 'agents.createAccount',
+            className: styles.labelText
+          })
+        ]),
+        h(Button, {
           type: 'submit',
-          label: (
-            h(FormattedMessage, {
-              id: 'agents.signIn',
-              className: styles.labelText
-            })
-          ),
+          variant: 'raised',
+          color: 'secondary',
           className: styles.signInAction,
           onClick: navigateToSignIn
-        }),
+        }, [
+          h(FormattedMessage, {
+            id: 'agents.signIn',
+            className: styles.labelText
+          })
+        ]),
       ])
     ])
   )

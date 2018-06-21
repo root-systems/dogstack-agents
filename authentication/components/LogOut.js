@@ -1,13 +1,15 @@
+const React = require('react')
 const h = require('react-hyperscript')
-const FlatButton = require('material-ui/FlatButton').default
+const Button = require('@material-ui/core/Button').default
 const { connect: connectFela } = require('react-fela')
 const compose = require('recompose/compose').default
 const { FormattedMessage } = require('dogstack/intl')
 const { omit, merge } = require('ramda')
+const ListItemIcon = require('@material-ui/core/ListItemIcon').default
 
 const styles = require('../styles/LogOut')
 
-const getMoreProps = omit(['styles', 'actions', 'as', 'onClick'])
+const getMoreProps = omit(['styles', 'actions', 'as', 'onClick', 'leftIcon'])
 
 const LogOut = compose(
   connectFela(styles)
@@ -15,9 +17,9 @@ const LogOut = compose(
   const {
     styles,
     actions,
-    as: Component = FlatButton,
-    onClick
-    // ...moreProps
+    as: Component = Button,
+    onClick,
+    leftIcon = null
   } = props
   const moreProps = getMoreProps(props)
   return (
@@ -31,6 +33,9 @@ const LogOut = compose(
       },
       moreProps
     ), [
+      h(ListItemIcon, {}, [
+        leftIcon
+      ]),
       h(FormattedMessage, {
         id: 'agents.logOut',
         className: styles.buttonText

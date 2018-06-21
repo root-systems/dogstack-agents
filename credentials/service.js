@@ -84,10 +84,11 @@ function clearRemoteData (hook) {
 }
 
 function setProfileData (hook) {
+  // TODO: IK: fairly certain I added the email field in here for simpler population of Cobuy profiles which have emails, if so that was a mistake as profile migration of this repo has no email field
   if (!hook.data) return hook
 
   var name = hook.data.name
-  var email = hook.data.email
+  // var email = hook.data.email
   var avatar
   delete hook.data.name
 
@@ -105,7 +106,7 @@ function setProfileData (hook) {
 
   hook.data.profile = {
     name,
-    email,
+    // email,
     avatar
   }
 

@@ -4,9 +4,7 @@ const { Field, reduxForm: connectForm } = require('redux-form')
 const compose = require('recompose/compose').default
 const { mapObjIndexed, merge } = require('ramda')
 const { TextField } = require('redux-form-material-ui')
-const FlatButton = require('material-ui/FlatButton').default
-const RaisedButton = require('material-ui/RaisedButton').default
-const FontIcon = require('material-ui/FontIcon').default
+const Button = require('@material-ui/core/Button').default
 const { FormattedMessage } = require('dogstack/intl')
 
 const styles = require('../styles/SignIn')
@@ -29,7 +27,7 @@ const LocalAuthenticationForm = compose(
       h(Field, {
         name: 'email',
         type: 'email',
-        floatingLabelText: (
+        label: (
           h(FormattedMessage, {
             id: 'agents.email',
             className: styles.labelText
@@ -41,7 +39,7 @@ const LocalAuthenticationForm = compose(
       h(Field, {
         name: 'password',
         type: 'password',
-        floatingLabelText: (
+        label: (
           h(FormattedMessage, {
             id: 'agents.password',
             className: styles.labelText
@@ -53,28 +51,29 @@ const LocalAuthenticationForm = compose(
       h('div', {
         className: styles.actions
       }, [
-        h(RaisedButton, {
+        h(Button, {
           type: 'submit',
-          label: (
-            h(FormattedMessage, {
-              id: 'agents.signIn',
-              className: styles.labelText
-            })
-          ),
-          primary: true,
+          variant: 'raised',
+          color: 'primary',
           className: styles.signInAction
-        }),
-        h(FlatButton, {
+        }, [
+          h(FormattedMessage, {
+            id: 'agents.signIn',
+            className: styles.labelText
+          })
+        ]),
+        h(Button, {
           type: 'submit',
-          label: (
-            h(FormattedMessage, {
-              id: 'agents.createAccount',
-              className: styles.labelText
-            })
-          ),
+          variant: 'raised',
+          color: 'secondary',
           className: styles.registerAction,
           onClick: navigateToRegister
-        }),
+        }, [
+          h(FormattedMessage, {
+            id: 'agents.createAccount',
+            className: styles.labelText
+          })
+        ]),
       ])
     ])
   )
