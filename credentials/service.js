@@ -1,5 +1,5 @@
 const feathersKnex = require('feathers-knex')
-const { hashPassword } = require('feathers-authentication-local').hooks
+const { hashPassword } = require('@feathersjs/authentication-local').hooks
 const { isProvider: isTransport, iff, discard } = require('feathers-hooks-common')
 const isNil = require('ramda/src/isNil')
 
