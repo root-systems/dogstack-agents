@@ -55,7 +55,7 @@
     "feathers-action": "^2.4.0",
     "feathers-action-react": "^2.2.1",
     "feathers-hooks-common": "ahdinosaur/feathers-hooks-common#build",
-    "feathers-knex": "^2.6.3",
+    "feathers-knex": "^3.1.1",
     "incremental-id": "^1.0.0",
     "passport-facebook": "^2.1.1",
     "passport-github": "^1.1.0",
@@ -68,13 +68,14 @@
     "react-redux": "^5.0.5",
     "react-router-redux": "^4.0.8",
     "recompose": "^0.25.0",
-    "redux": "^3.6.0",
+    "redux": "^4.0.0",
     "redux-auth-wrapper": "^2.0.1",
     "redux-form": "^7.0.4",
     "redux-form-material-ui": "^5.0.0-beta.3",
     "redux-fp": "^0.2.0",
-    "redux-observable": "^0.14.1",
+    "redux-observable": "^1.0.0",
     "reselect": "^3.0.1",
-    "rxjs": "^5.4.0"
+    "rxjs": "^6.2.1",
+    "rxjs-compat": "^6.2.1"
   }
 }
