@@ -32,7 +32,6 @@ function signInEpic (action$, store, { feathers }) {
       from(
         feathers.authenticate(payload)
           .then(({ accessToken }) => {
-            console.log('inside mergeMap')
             return feathers.passport.verifyJWT(accessToken)
               .then(({ credentialId }) => {
                 return { accessToken, credentialId }
