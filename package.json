@@ -75,7 +75,6 @@
     "redux-fp": "^0.2.0",
     "redux-observable": "^1.0.0",
     "reselect": "^3.0.1",
-    "rxjs": "^6.2.1",
-    "rxjs-compat": "^6.2.1"
+    "rxjs": "^6.2.1"
   }
 }
