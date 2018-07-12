@@ -5,8 +5,8 @@ const createCid = require('incremental-id')
 const { push } = require('react-router-redux')
 
 const { actions: agents } = require('../agents')
-const { actions: credentials } = require('../credentials')
-const { actions: profiles } = require('../profiles')
+// const { actions: credentials } = require('../credentials')
+// const { actions: profiles } = require('../profiles')
 const {
   signIn, signInStart, signInSuccess, signInError,
   logOut, logOutStart, logOutSuccess, logOutError,
@@ -15,7 +15,7 @@ const {
 
 module.exports = combineEpics(initEpic, signInEpic, logOutEpic, registerEpic)
 
-exports.initEpic = initEpic
+module.exports.initEpic = initEpic
 function initEpic (action$) {
   return of(signIn(createCid()))
   // .pipe(
@@ -23,7 +23,7 @@ function initEpic (action$) {
   // )
 }
 
-exports.signInEpic = signInEpic
+module.exports.signInEpic = signInEpic
 function signInEpic (action$, store, { feathers }) {
   return action$.pipe(
     ofType(signIn.type),
@@ -33,12 +33,15 @@ function signInEpic (action$, store, { feathers }) {
         feathers.authenticate(payload)
           .then(({ accessToken }) => {
             return feathers.passport.verifyJWT(accessToken)
-              .then(({ credentialId }) => {
+              .then((result) => {
+                const { credentialId } = result
                 return { accessToken, credentialId }
               })
           })
       ).pipe(
         mergeMap(({ accessToken, credentialId }) => {
+          // what is credentialId?? looks like it's probably agentId now
+          // in which case the other method below could be 'fetchAgent'
           return indexConcat(
             of(signInSuccess(cid, { accessToken, credentialId })),
             fetchAgentByCredential(action$, cid, credentialId)
@@ -57,7 +60,7 @@ function signInEpic (action$, store, { feathers }) {
   )
 }
 
-exports.logOutEpic = logOutEpic
+module.exports.logOutEpic = logOutEpic
 function logOutEpic (action$, store, { feathers }) {
   return action$.pipe(
     ofType(logOut.type),
@@ -74,7 +77,7 @@ function logOutEpic (action$, store, { feathers }) {
   )
 }
 
-exports.registerEpic = registerEpic
+module.exports.registerEpic = registerEpic
 function registerEpic (action$, store, deps) {
   return action$.pipe(
     ofType(register.type),
@@ -83,17 +86,17 @@ function registerEpic (action$, store, deps) {
       const { email, password, name } = payload
       const { cid } = action.meta
 
-      const createdSuccess$ = action$.pipe(ofType(credentials.complete.type), filter(onlyCid), take(1))
-      const createdError$ = action$.pipe(ofType(credentials.error.type), filter(onlyCid), take(1))
+      const createdSuccess$ = action$.pipe(ofType(agents.complete.type), filter(onlyCid), take(1))
+      const createdError$ = action$.pipe(ofType(agents.error.type), filter(onlyCid), take(1))
       // get only the last set item, since it should be the latest
-      const createdSet$ = action$.pipe(ofType(credentials.set.type), filter(onlyCid))
+      const createdSet$ = action$.pipe(ofType(agents.set.type), filter(onlyCid))
       const signInSuccess$ = action$.pipe(ofType(signInSuccess.type), filter(onlyCid), take(1))
 
       // TODO create initial profile with name
       return indexMerge(
         of(
           registerStart(cid),
-          credentials.create(cid, { email, password, name })
+          agents.create(cid, { email, password, name })
         ),
         createdSuccess$.pipe(
           withLatestFrom(createdSet$, (success, set) => set.payload.data),
@@ -115,25 +118,26 @@ function registerEpic (action$, store, deps) {
   )
 }
 
-
+// IK: shouldn't need all of this now that profiles and credentials all in agents table
 function fetchAgentByCredential (action$, cid, credentialId) {
   const agentSet$ = action$.pipe(ofType(agents.set.type), filter(onlyCid))
-  const credentialSet$ = action$.pipe(ofType(credentials.set.type), filter(onlyCid))
-  const profileSet$ = action$.pipe(ofType(profiles.set.type), filter(onlyCid))
+  // const credentialSet$ = action$.pipe(ofType(credentials.set.type), filter(onlyCid))
+  // const profileSet$ = action$.pipe(ofType(profiles.set.type), filter(onlyCid))
 
   return indexMerge(
-    of(credentials.get(cid, credentialId)),
-    credentialSet$.pipe(
-      mergeMap(action => {
-        const { agentId } = action.payload.data
-        return of(
-          credentials.complete(cid),
-          agents.get(cid, agentId),
-          profiles.find(cid, { query: { agentId } })
-        )
-      })
-    ),
-    profileSet$.pipe(map(() => profiles.complete(cid))),
+    // of(credentials.get(cid, credentialId)),
+    // credentialSet$.pipe(
+    //   mergeMap(action => {
+    //     const { agentId } = action.payload.data
+    //     return of(
+    //       credentials.complete(cid),
+    //       // agents.get(cid, agentId),
+    //       profiles.find(cid, { query: { agentId } })
+    //     )
+    //   })
+    // ),
+    // agents.get(cid, agentId),
+    // profileSet$.pipe(map(() => profiles.complete(cid))),
     agentSet$.pipe(map(() => agents.complete(cid)))
   )
 

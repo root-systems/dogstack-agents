@@ -1,3 +1,4 @@
+// TODO: IK: which of these should be required? perhaps only email / password?
 exports.up = function (knex, Promise) {
   return knex.schema.createTableIfNotExists('agents', function (table) {
     table.increments('id')
