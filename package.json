@@ -51,7 +51,7 @@
     "@feathersjs/authentication-jwt": "^2.0.1",
     "@feathersjs/authentication-local": "^1.2.1",
     "@feathersjs/authentication-oauth2": "^1.0.3",
-    "@material-ui/core": "^1.0.0",
+    "@material-ui/core": "1.0.0",
     "@root-systems/redux-form-validators": "^1.1.0",
     "dogstack": "root-systems/dogstack#upgrade-deps",
     "es2040": "^1.2.6",
