@@ -11,6 +11,7 @@ const accessToken = action => (state = null) => {
   }
 }
 
+// TODO: IK: this should be agentId
 const credentialId = action => (state = null) => {
   switch (action.type) {
     case 'SIGN_IN_SUCCESS':

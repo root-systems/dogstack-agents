@@ -1,10 +1,10 @@
 const { keys, assign } = Object
 const assert = require('assert')
-const authentication = require('feathers-authentication')
+const authentication = require('@feathersjs/authentication')
 const { authenticate } = authentication.hooks
-const local = require('feathers-authentication-local')
-const jwt = require('feathers-authentication-jwt')
-const oauth2 = require('feathers-authentication-oauth2')
+const local = require('@feathersjs/authentication-local')
+const jwt = require('@feathersjs/authentication-jwt')
+const oauth2 = require('@feathersjs/authentication-oauth2')
 
 const remotePlugins = { oauth2 }
 

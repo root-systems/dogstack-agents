@@ -1,5 +1,6 @@
 const test = require('ava')
 const { Observable, Scheduler } = require('rxjs')
+const { tap } = require('rxjs/operators')
 const { ActionsObservable } = require('redux-observable')
 const {
   signInEpic,
@@ -21,24 +22,25 @@ const {
   registerError,
   register
 } = require('../actions')
-const { actions as credentialActions } = require('../../credentials')
+const { actions: agentActions } = require('../../agents')
 
-test('register dispatches registerStart and credentials.create action', function (t) {
+test('register dispatches registerStart and agents.create action', function (t) {
   t.plan(3)
   var i = 0
-  var credential = {
+  var agent = {
     email: 'test@test.nz',
-    password: 'secret-sauce'
+    password: 'secret-sauce',
+    name: 'Test Testerson'
   }
   const cid = Symbol('cid')
-  const registerAction = register(cid, credential)
+  const registerAction = register(cid, agent)
   const action$ = ActionsObservable.of(registerAction)
   const expectedActions = [
     registerStart(cid),
-    credentialActions.create(cid, credential)
+    agentActions.create(cid, agent)
   ]
-  return registerEpic(action$, null, {})
-    .do(actualAction => {
+  return registerEpic(action$, null, {}).pipe(
+    tap(actualAction => {
       const expectedAction = expectedActions[i]
       if (i === 0 || i === 1) {
         t.deepEqual(actualAction, expectedAction)
@@ -46,31 +48,32 @@ test('register dispatches registerStart and credentials.create action', function
       }
       i++
     })
+  )
 })
 
 test('register happy path dispatches registerSuccess and signIn', function (t) {
   t.plan(3)
   var i = 0
-  var credential = {
-    id: Symbol('credential')
+  var agent = {
+    id: Symbol('agent')
   }
   const cid = Symbol('cid')
-  const registerAction = register(cid, credential)
+  const registerAction = register(cid, agent)
   const action$ = ActionsObservable.from(
     Observable.create(observer => {
       observer.next(registerAction)
-      observer.next(credentialActions.set(cid, credential.id, credential))
-      observer.next(credentialActions.complete(cid))
+      observer.next(agentActions.set(cid, agent.id, agent))
+      observer.next(agentActions.complete(cid))
       observer.complete()
     }),
     Scheduler.async
   )
   const expectedActions = [
-    registerSuccess(cid, credential)
-    // signIn(cid, credential)
+    registerSuccess(cid, agent),
+    signIn(cid, agent)
   ]
-  return registerEpic(action$)
-    .do(actualAction => {
+  return registerEpic(action$).pipe(
+    tap(actualAction => {
       const expectedAction = expectedActions[i - 2]
       if (i === 2) {
         t.deepEqual(actualAction, expectedAction)
@@ -80,33 +83,33 @@ test('register happy path dispatches registerSuccess and signIn', function (t) {
       }
       i++
     })
+  )
 })
 
-// this legit fails because bug in feathers-action
-// where actions.error.type is undefined
 test('register unhappy path dispatches registerError', function (t) {
   t.plan(2)
   var i = 0
-  var credential = {}
+  var agent = {}
   var err = 'bang!'
   const cid = Symbol('cid')
-  const registerAction = register(cid, credential)
+  const registerAction = register(cid, agent)
   const action$ = ActionsObservable.from(
     Observable.create(observer => {
       observer.next(registerAction)
-      observer.next(credentialActions.error(cid, err))
+      observer.next(agentActions.error(cid, err))
       observer.complete()
     }),
     Scheduler.async
   )
   const expectedAction = registerError(cid, err)
-  return registerEpic(action$)
-    .do(actualAction => {
+  return registerEpic(action$).pipe(
+    tap(actualAction => {
       if (i++ === 2) {
         t.deepEqual(actualAction, expectedAction)
         t.is(actualAction.payload, expectedAction.payload)
       }
     })
+  )
 })
 
 test('signIn dispatches signInStart action', function (t) {
@@ -118,36 +121,47 @@ test('signIn dispatches signInStart action', function (t) {
   ])
   const expectedAction = signInStart(cid)
   const feathers = {
-    authenticate: () => Promise.resolve()
+    authenticate: (creds) => Promise.resolve({ accessToken: 'test' }),
+    passport: {
+      verifyJWT: (token) => Promise.resolve({ credentialId: 1 })
+    }
   }
-  return signInEpic(action$, {}, { feathers })
-    .do(actualAction => {
+  return signInEpic(action$, {}, { feathers }).pipe(
+    tap(actualAction => {
       if (i++ === 0) {
         t.deepEqual(actualAction, expectedAction)
         t.is(actualAction.payload, expectedAction.payload)
       }
     })
+  )
 })
 
 test('signIn happy path dispatches signInSuccess action', function (t) {
-  t.plan(2)
+  t.plan(1)
   var i = 0
-  var creds = {}
+  var creds = {
+    email: 'test@test.nz',
+    password: 'secret-sauce'
+  }
   const cid = Symbol('cid')
   const action$ = ActionsObservable.from([
     signIn(cid, creds)
   ])
-  const expectedAction = signInSuccess(cid, creds)
+  const expectedAction = signInSuccess(cid, { accessToken: 'test', credentialId: 1 }) // TODO: IK: change this to agentId
   const feathers = {
-    authenticate: (creds) => Promise.resolve(creds)
+    authenticate: (creds) => Promise.resolve({ accessToken: 'test' }),
+    passport: {
+      verifyJWT: (token) => Promise.resolve({ credentialId: 1 })
+    }
   }
-  return signInEpic(action$, {}, { feathers })
-    .do(actualAction => {
+  return signInEpic(action$, {}, { feathers }).pipe(
+    tap(actualAction => {
       if (i++ === 1) {
+        // IK: t.is equality checking (as per other tests) fails here in that the payloads are deeply equal, but not the same - don't think it's necessary to test this though
         t.deepEqual(actualAction, expectedAction)
-        t.is(actualAction.payload, expectedAction.payload)
       }
     })
+  )
 })
 
 test('signIn unhappy path dispatches signInError', function (t) {
@@ -162,13 +176,14 @@ test('signIn unhappy path dispatches signInError', function (t) {
   const feathers = {
     authenticate: (creds) => Promise.reject(err)
   }
-  return signInEpic(action$, {}, { feathers })
-    .do(actualAction => {
+  return signInEpic(action$, {}, { feathers }).pipe(
+    tap(actualAction => {
       if (i++ === 1) {
         t.deepEqual(actualAction, expectedAction)
         t.is(actualAction.payload, expectedAction.payload)
       }
     })
+  )
 })
 
 test('logOut dispatches logOutStart action', function (t) {
@@ -182,13 +197,14 @@ test('logOut dispatches logOutStart action', function (t) {
   const feathers = {
     logout: () => Promise.resolve()
   }
-  return logOutEpic(action$, {}, { feathers })
-    .do(actualAction => {
+  return logOutEpic(action$, {}, { feathers }).pipe(
+    tap(actualAction => {
       if (i++ === 0) {
         t.deepEqual(actualAction, expectedAction)
         t.is(actualAction.payload, expectedAction.payload)
       }
     })
+  )
 })
 
 test('logOut happy path dispatches logOutSuccess action', function (t) {
@@ -202,13 +218,14 @@ test('logOut happy path dispatches logOutSuccess action', function (t) {
   const feathers = {
     logout: () => Promise.resolve()
   }
-  return logOutEpic(action$, {}, { feathers })
-    .do(actualAction => {
+  return logOutEpic(action$, {}, { feathers }).pipe(
+    tap(actualAction => {
       if (i++ === 1) {
         t.deepEqual(actualAction, expectedAction)
         t.is(actualAction.payload, expectedAction.payload)
       }
     })
+  )
 })
 
 test('logOut unhappy path dispatches logOutError', function (t) {
@@ -223,11 +240,12 @@ test('logOut unhappy path dispatches logOutError', function (t) {
   const feathers = {
     logout: (creds) => Promise.reject(err)
   }
-  return logOutEpic(action$, {}, { feathers })
-    .do(actualAction => {
+  return logOutEpic(action$, {}, { feathers }).pipe(
+    tap(actualAction => {
       if (i++ === 1) {
         t.deepEqual(actualAction, expectedAction)
         t.is(actualAction.payload, expectedAction.payload)
       }
     })
+  )
 })

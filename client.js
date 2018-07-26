@@ -1,4 +1,4 @@
-const auth = require('feathers-authentication-client')
+const auth = require('@feathersjs/authentication-client')
 
 module.exports = function () {
   const app = this

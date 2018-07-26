@@ -13,11 +13,11 @@ var config = {
       'jwt',
       'oauth2'
     ],
-    service: 'credentials',
-    entity: 'credential',
+    service: 'agents',
+    entity: 'agent',
     local: {
-      service: 'credentials',
-      entity: 'credential'
+      service: 'agents',
+      entity: 'agent'
     },
     remote: {
       google: {
